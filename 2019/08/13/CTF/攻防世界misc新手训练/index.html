@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.2.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"winny1001.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":"ture","version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"fold":{"enable":true,"height":400},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="攻防世界misc新手训练记录">
+<meta property="og:type" content="article">
+<meta property="og:title" content="攻防世界misc新手训练">
+<meta property="og:url" content="https://winny1001.github.io/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/index.html">
+<meta property="og:site_name" content="Winny的一亩三分地">
+<meta property="og:description" content="攻防世界misc新手训练记录">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/1565662531551.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/1565663056074.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/1565663917760.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/1565664467029.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/1565664827126.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/1565664868748.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/1565665050123.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/1565667226044.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/1565667434792.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/1565672807242.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/1565673356005.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/1565674950466.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/1565677029669.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/68b0bc0367d872787f75b707f8651bfc.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/604277f614e16d9b2655aff98f6a1209.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/626be0972cfd0387b2366772b6370555.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/9d2acf0a07f95ae21775f8e888c90183.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/3686b451daef669ab2149897fd4f7f40.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/1d88d83452535af26dc293573b52cdae.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/e3c33c15b16d75396909fdab4ef8862b.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/cb2bfab2d42a916479e2797f244ac4c9.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/0b452e55a1920a85eb40d837ad849df6.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/481e32a111ca3c988e848112a561bef8.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/0b79c78f516a5f75d162f21d381203d4.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/856020ab1a06e767e64cefbf4b4ab84e.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/2a82fb3fa956480457f557175cab662d.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/c809aaa93b5ec50c85071cc860807c5d.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/72636e0c4b94af8a162642f50212e99e.png">
+<meta property="article:published_time" content="2019-08-13T09:48:56.000Z">
+<meta property="article:modified_time" content="2024-06-11T08:23:14.916Z">
+<meta property="article:author" content="Winny">
+<meta property="article:tag" content="CTF">
+<meta property="article:tag" content="misc">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://winny1001.github.io/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/1565662531551.png">
+
+
+<link rel="canonical" href="https://winny1001.github.io/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://winny1001.github.io/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/","path":"2019/08/13/CTF/攻防世界misc新手训练/","title":"攻防世界misc新手训练"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>攻防世界misc新手训练 | Winny的一亩三分地</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Winny的一亩三分地</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description"> Imagination will take you everywhere</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#this_is_flag"><span class="nav-number">1.</span> <span class="nav-text">this_is_flag</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ext3"><span class="nav-number">2.</span> <span class="nav-text">ext3</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#give_you_flag"><span class="nav-number">3.</span> <span class="nav-text">give_you_flag</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#pdf"><span class="nav-number">4.</span> <span class="nav-text">pdf</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#simplerar"><span class="nav-number">5.</span> <span class="nav-text">SimpleRAR</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9D%9A%E6%8C%8160s"><span class="nav-number">6.</span> <span class="nav-text">坚持60s</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#gif"><span class="nav-number">7.</span> <span class="nav-text">gif</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8E%80%E6%A1%8C%E5%AD%90"><span class="nav-number">8.</span> <span class="nav-text">掀桌子</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A6%82%E6%9D%A5%E5%8D%81%E4%B8%89%E6%8E%8C"><span class="nav-number">9.</span> <span class="nav-text">如来十三掌</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#base64stego"><span class="nav-number">10.</span> <span class="nav-text">base64stego</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8A%9F%E5%A4%AB%E5%86%8D%E9%AB%98%E4%B9%9F%E6%80%95%E8%8F%9C%E5%88%80"><span class="nav-number">11.</span> <span class="nav-text">功夫再高也怕菜刀</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#stegano"><span class="nav-number">12.</span> <span class="nav-text">stegano</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Winny</p>
+  <div class="site-description" itemprop="description">因为热爱，所以折腾</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/winny1001" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;winny1001" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="Back to top">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://winny1001.github.io/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Winny">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Winny的一亩三分地">
+      <meta itemprop="description" content="因为热爱，所以折腾">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="攻防世界misc新手训练 | Winny的一亩三分地">
+      <meta itemprop="description" content="攻防世界misc新手训练记录">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          攻防世界misc新手训练
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2019-08-13 18:48:56" itemprop="dateCreated datePublished" datetime="2019-08-13T18:48:56+09:00">2019-08-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-06-11 17:23:14" itemprop="dateModified" datetime="2024-06-11T17:23:14+09:00">2024-06-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/CTF/" itemprop="url" rel="index"><span itemprop="name">CTF</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/CTF/misc/" itemprop="url" rel="index"><span itemprop="name">misc</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">攻防世界misc新手训练记录</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="this_is_flag">this_is_flag</h1>
+<p>题目描述：Most flags are in the form flag{xxx}, for
+example:flag{th1s_!s_a_d4m0_4la9}</p>
+<p>看题目描述就行了。</p>
+<h1 id="ext3">ext3</h1>
+<p>题目描述：今天是菜狗的生日，他收到了一个linux系统光盘</p>
+<p>先搜一下有没有flag明文：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">strings linux | grep flag</span><br></pre></td></tr></table></figure>
+<img src="/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/1565662531551.png" class="" width="1565662531551">
+<p>看来flag在txt里，那挂载到系统上看看这个文件：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mount linux /mnt/sda7</span><br><span class="line">cd /mnt/sda7/O7avZhikgKgbF</span><br><span class="line">cat flag.txt</span><br></pre></td></tr></table></figure>
+<p>得到一串字符：<code>ZmxhZ3tzYWpiY2lienNrampjbmJoc2J2Y2pianN6Y3N6Ymt6an0=</code>，这一看就是base64编码，解码就行了</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat flag.txt | base64 -d</span><br></pre></td></tr></table></figure>
+<p>得到flag：<code>flag&#123;sajbcibzskjjcnbhsbvcjbjszcszbkzj&#125;</code></p>
+<h1 id="give_you_flag">give_you_flag</h1>
+<p>题目描述：菜狗找到了文件中的彩蛋很开心，给菜猫发了个表情包</p>
+<p>给了个gif图，有一帧是二维码，直接暂停就可以了</p>
+<img src="/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/1565663056074.png" class="" width="1565663056074">
+<p>这个二维码没有定位点，需要加上，网上找个定位符截下来拼上去就行了</p>
+<img src="/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/1565663917760.png" class="" width="1565663917760">
+<p>扫出来就完了。<code>flag&#123;e7d478cf6b915f50ab1277f78502a2c5&#125;</code></p>
+<h1 id="pdf">pdf</h1>
+<p>题目描述：菜猫给了菜狗一张图，说图下面什么都没有</p>
+<img src="/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/1565664467029.png" class="" width="1565664467029">
+<p>看看有没有啥文件夹着</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">binwalk pdf.pdf</span><br></pre></td></tr></table></figure>
+<p>发现啥也没有，好吧。然后我用Adobe Acrobat打开，是这样的：</p>
+<img src="/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/1565664827126.png" class="" width="1565664827126">
+<p>图片中间有个文本框，把图片拖走看看：</p>
+<img src="/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/1565664868748.png" class="" width="1565664868748">
+<h1 id="simplerar">SimpleRAR</h1>
+<p>题目描述：菜狗最近学会了拼图，这是他刚拼好的，可是却搞错了一块(ps:双图层)</p>
+<p>打开压缩包，里面有一个flag.txt，打开一看，说“flag is not
+here”<del>废话，怎么可能这么简单啦</del>，打开压缩包的时候有个提示：</p>
+<img src="/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/1565665050123.png" class="" width="1565665050123">
+<p>UE打开看看</p>
+<img src="/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/1565667226044.png" class="" width="1565667226044">
+<p>这题我当时做一直没思路，后来看了别人的wp说rar对png的文件类型编码是74，就在flag.txt文件结束，这里是7A，所以改过来就行了</p>
+<p>改完出来了图片</p>
+<img src="/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/1565667434792.png" class="" width="1565667434792">
+<p>打开看看，是个空白图片，UE打开发现是个gif，于是改个后缀，有两帧，把两帧保存下来放到Stegsolve切换不同通道看一下，发现在Gray
+bits通道中有图像：</p>
+<img src="/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/1565672807242.png" class="" width="1565672807242">
+<p>把两个图片保存下来拼到一起，再补上定位点就可以了</p>
+<img src="/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/1565673356005.png" class="" width="1565673356005">
+<p>得到flag：<code>flag&#123;yanji4n_bu_we1shi&#125;</code></p>
+<h1 id="坚持60s">坚持60s</h1>
+<p>题目描述：菜狗发现最近菜猫不爱理他，反而迷上了菜鸡</p>
+<p>给了个躲弹幕的小游戏，说坚持60s，打了好几把，太菜了打不过</p>
+<p>拖到Java
+Decompiler里反编译一下，在PlaneGameFrame.class里找到了flag</p>
+<img src="/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/1565674950466.png" class="" width="1565674950466">
+<p>提交了一下发现不对，仔细一看原来里面还有个base64加密，解密后再提交就可以了，最后结果：<code>flag&#123;DajiDali_JinwanChiji&#125;</code></p>
+<h1 id="gif">gif</h1>
+<p>题目描述：菜狗截获了一张菜鸡发给菜猫的动态图，却发现另有玄机</p>
+<p>打开压缩包两个文件夹，_MACOSX好像和mac系统有关系，
+不知道要干啥，进入另一个文件夹gif，看到里面全是jpg</p>
+<img src="/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/1565677029669.png" class="" width="1565677029669">
+<p>分析了半天图片没有啥隐写，一度陷入了僵局。后来一想，这不会是二进制吧，于是白色代表0，黑色代表1，看了看，发现一共104张图片，是8的倍数，那就是8位一个字节。写个脚本</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">message=[<span class="number">0b1100110</span>,<span class="number">0b1101100</span>,<span class="number">0b1100001</span>,<span class="number">0b1100111</span>,<span class="number">0b1111011</span>,<span class="number">0b1000110</span>,<span class="number">0b1110101</span>,<span class="number">0b1001110</span>,<span class="number">0b1011111</span>,<span class="number">0b1100111</span>,<span class="number">0b1101001</span>,<span class="number">0b1000110</span>,<span class="number">0b1111101</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(message)):</span><br><span class="line">	<span class="built_in">print</span>(<span class="built_in">chr</span>(message[i]),end = <span class="string">&quot;&quot;</span>)</span><br><span class="line"> </span><br><span class="line"><span class="comment">#得出结果：   flag&#123;FuN_giF&#125;</span></span><br></pre></td></tr></table></figure>
+<h1 id="掀桌子">掀桌子</h1>
+<p>题目描述：菜狗截获了一份报文如下c8e9aca0c6f2e5f3e8c4efe7a1a0d4e8e5a0e6ece1e7a0e9f3baa0e8eafae3f9e4eafae2eae4e3eaebfaebe3f5e7e9f3e4e3e8eaf9eaf3e2e4e6f2，生气地掀翻了桌子(╯°□°）╯︵
+┻━┻</p>
+<p>这题毫无思路，各种能想到的加密的方法都试着解了一下发现没有用。后来终于知道原来是两个一组转成二进制再转成ASCII码。</p>
+<p>用JPK转码：</p>
+<img src="/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/68b0bc0367d872787f75b707f8651bfc.png" class="">
+<p>先转成七位二进制（inradix为16，outradix为2，BitsPerBlock为7）：</p>
+<img src="/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/604277f614e16d9b2655aff98f6a1209.png" class="">
+<p>为什么是七位呢，因为ASCII码就用到7位。然后再转成ASCII码：</p>
+<img src="/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/626be0972cfd0387b2366772b6370555.png" class="">
+<p>最后加上flag{}就可以得到flag。</p>
+<h1 id="如来十三掌">如来十三掌</h1>
+<p>题目描述：菜狗为了打败菜猫，学了一套如来十三掌。</p>
+<p>下下来个doc，打开看一下：</p>
+<img src="/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/9d2acf0a07f95ae21775f8e888c90183.png" class="">
+<p>没啥头绪，UE打开一看，发现是个zip，所以改文件的后缀为zip打开压缩包，里面有好多文件，全是xml文件：</p>
+<img src="/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/3686b451daef669ab2149897fd4f7f40.png" class="">
+<p>挨个打开看了看，没有啥发现，只在一个文件里看到了类似flag的东西：</p>
+<img src="/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/1d88d83452535af26dc293573b52cdae.png" class="">
+<p>提交上去也是错的。</p>
+<p>后来，我发现有个这<a
+target="_blank" rel="noopener" href="http://keyfc.net/bbs/tools/tudoucode.aspx">网站</a>:</p>
+<img src="/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/e3c33c15b16d75396909fdab4ef8862b.png" class="">
+<p>wdnmd这谁顶得住啊。解密一下：</p>
+<img src="/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/cb2bfab2d42a916479e2797f244ac4c9.png" class="">
+<p>得到一个字符串，再rot13解码（十三掌），再base64解码得到flag</p>
+<p><code>flag&#123;bdscjhbkzmnfrdhbvckijndskvbkjdsab&#125;</code></p>
+<p>其实后来我才知道，doc本身就是一个压缩包，就像apk一样。</p>
+<h1 id="base64stego">base64stego</h1>
+<p>题目描述：菜狗经过几天的学习，终于发现了如来十三掌最后一步的精髓</p>
+<p>下载下来的压缩包居然要密码，搞了半天不知道密码是啥，后来用winrar修复了一下，好了……能打开了。
+:han:</p>
+<p>打开里面的txt，发现全是base64加密的字符串：</p>
+<img src="/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/0b452e55a1920a85eb40d837ad849df6.png" class="">
+<p>解密后发现是一段关于隐写术的介绍。那看来是base64隐写了。</p>
+<p>关于base64隐写，可以看这篇文章：<a
+target="_blank" rel="noopener" href="https://www.jianshu.com/p/48fe4dd3e5ce">base64隐写</a>，这里暂时就不展开来讲了。</p>
+<p>解密后加上flag{}就可以得到flag。</p>
+<p><code>flag&#123;Base_sixty_four_point_five&#125;</code></p>
+<h1 id="功夫再高也怕菜刀">功夫再高也怕菜刀</h1>
+<p>题目描述：菜狗决定用菜刀和菜鸡决一死战</p>
+<p>附件给了个流量包，foremost分离得到一个zip文件，但是有密码，所以得找到密码。</p>
+<p>分析流量包，wireshark按<code>Ctrl</code>+<code>f</code>，搜索字符串flag，分组选择分组字节流，在找flag的过程中找到一个6666.jpg</p>
+<img src="/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/481e32a111ca3c988e848112a561bef8.png" class="">
+<p>追踪该tcp流：</p>
+<img src="/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/0b79c78f516a5f75d162f21d381203d4.png" class="">
+<p>现在我们要把jpg搞下来，jpg文件头是FFD8，文件尾是FFD9，找到FFD8，和最后一个FFD9，把中间的数据复制下来，在winhex里粘贴并保存为jpg，注意粘贴的时候格式选择ASCII
+Hex。</p>
+<img src="/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/856020ab1a06e767e64cefbf4b4ab84e.png" class="">
+<p>打开发现了密码：</p>
+<img src="/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/2a82fb3fa956480457f557175cab662d.png" class="">
+<p>解压zip打开flag.txt得到flag</p>
+<p><code>flag&#123;3OpWdJ-JP6FzK-koCMAK-VkfWBq-75Un2z&#125;</code></p>
+<h1 id="stegano">stegano</h1>
+<p>题目描述：菜狗收到了图后很开心，玩起了pdf</p>
+<p>下载pdf后wps打开，<code>Ctrl</code>+<code>a</code>，<code>Ctrl</code>+<code>c</code>复制，粘贴在notepad++里看一下，发现这样的字段：</p>
+<img src="/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/c809aaa93b5ec50c85071cc860807c5d.png" class="">
+<p>感觉像是摩斯电码，把A变成.把B变成-试一下（我也不知道哪个对应.就随便试，反正就两种情况）。</p>
+<img src="/2019/08/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cmisc%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/72636e0c4b94af8a162642f50212e99e.png" class="">
+<p>结果咋提交都不对，看网上的WP和我结果一样，结果我就是不对。后来换了一个解码的解码，得到的是小写的结果。提交就对了。</p>
+<p>得到flag：<code>1nv151bl3m3554g3</code></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/CTF/" rel="tag"># CTF</a>
+              <a href="/tags/misc/" rel="tag"># misc</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+            </div>
+            <div class="post-nav-item">
+                <a href="/2019/08/15/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E9%80%86%E5%90%91%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/" rel="next" title="攻防世界逆向新手训练">
+                  攻防世界逆向新手训练 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Winny</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

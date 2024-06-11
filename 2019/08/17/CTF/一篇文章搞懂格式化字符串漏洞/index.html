@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.2.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"winny1001.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":"ture","version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"fold":{"enable":true,"height":400},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="学习了格式化字符串漏洞，看了好多文章，感觉写的都差点意思，于是自己记录一下，便于之后复习。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一片文章搞懂格式化字符串漏洞">
+<meta property="og:url" content="https://winny1001.github.io/2019/08/17/CTF/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E6%90%9E%E6%87%82%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/index.html">
+<meta property="og:site_name" content="Winny的一亩三分地">
+<meta property="og:description" content="学习了格式化字符串漏洞，看了好多文章，感觉写的都差点意思，于是自己记录一下，便于之后复习。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/17/CTF/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E6%90%9E%E6%87%82%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/1566005116498-20240607151345852.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/17/CTF/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E6%90%9E%E6%87%82%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/1566005556194-20240607151345821.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/17/CTF/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E6%90%9E%E6%87%82%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/1566006155661-20240607151345717.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/17/CTF/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E6%90%9E%E6%87%82%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/1566006274630-20240607151345821.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/17/CTF/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E6%90%9E%E6%87%82%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/1566006429774-20240607151345812.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/17/CTF/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E6%90%9E%E6%87%82%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/1566023620247-20240607151345971.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/17/CTF/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E6%90%9E%E6%87%82%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/1566023730070-20240607151345813.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/17/CTF/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E6%90%9E%E6%87%82%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/1566024610292-20240607151345978.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/17/CTF/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E6%90%9E%E6%87%82%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/1566029291179-20240607151345980.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/17/CTF/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E6%90%9E%E6%87%82%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/1566029414006-20240607151346062.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/17/CTF/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E6%90%9E%E6%87%82%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/1566032185561-20240607151345873.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/17/CTF/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E6%90%9E%E6%87%82%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/1566032317311-20240607151346031.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/17/CTF/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E6%90%9E%E6%87%82%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/1566032384441-20240607151345979.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/17/CTF/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E6%90%9E%E6%87%82%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/1566033484942-20240607151346132.png">
+<meta property="article:published_time" content="2019-08-17T08:31:03.000Z">
+<meta property="article:modified_time" content="2024-06-11T08:37:11.076Z">
+<meta property="article:author" content="Winny">
+<meta property="article:tag" content="CTF">
+<meta property="article:tag" content="pwn">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://winny1001.github.io/2019/08/17/CTF/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E6%90%9E%E6%87%82%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/1566005116498-20240607151345852.png">
+
+
+<link rel="canonical" href="https://winny1001.github.io/2019/08/17/CTF/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E6%90%9E%E6%87%82%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://winny1001.github.io/2019/08/17/CTF/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E6%90%9E%E6%87%82%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/","path":"2019/08/17/CTF/一篇文章搞懂格式化字符串漏洞/","title":"一片文章搞懂格式化字符串漏洞"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>一片文章搞懂格式化字符串漏洞 | Winny的一亩三分地</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Winny的一亩三分地</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description"> Imagination will take you everywhere</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#x00-%E5%BA%8F%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">0x00 序言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#x01-%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="nav-number">2.</span> <span class="nav-text">0x01 格式化字符串</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#x02-printf%E5%87%BD%E6%95%B0"><span class="nav-number">3.</span> <span class="nav-text">0x02 printf()函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#x03-%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8"><span class="nav-number">4.</span> <span class="nav-text">0x03 格式化字符串漏洞利用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%BB%E6%84%8F%E5%86%85%E5%AD%98%E8%AF%BB%E5%8F%96"><span class="nav-number">4.1.</span> <span class="nav-text">任意内存读取</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%BB%E6%84%8F%E5%86%85%E5%AD%98%E4%BF%AE%E6%94%B9"><span class="nav-number">4.2.</span> <span class="nav-text">任意内存修改</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Winny</p>
+  <div class="site-description" itemprop="description">因为热爱，所以折腾</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/winny1001" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;winny1001" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="Back to top">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://winny1001.github.io/2019/08/17/CTF/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E6%90%9E%E6%87%82%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Winny">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Winny的一亩三分地">
+      <meta itemprop="description" content="因为热爱，所以折腾">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="一片文章搞懂格式化字符串漏洞 | Winny的一亩三分地">
+      <meta itemprop="description" content="学习了格式化字符串漏洞，看了好多文章，感觉写的都差点意思，于是自己记录一下，便于之后复习。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          一片文章搞懂格式化字符串漏洞
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2019-08-17 17:31:03" itemprop="dateCreated datePublished" datetime="2019-08-17T17:31:03+09:00">2019-08-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-06-11 17:37:11" itemprop="dateModified" datetime="2024-06-11T17:37:11+09:00">2024-06-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Study/" itemprop="url" rel="index"><span itemprop="name">Study</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Study/CTF/" itemprop="url" rel="index"><span itemprop="name">CTF</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Study/CTF/pwn/" itemprop="url" rel="index"><span itemprop="name">pwn</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">学习了格式化字符串漏洞，看了好多文章，感觉写的都差点意思，于是自己记录一下，便于之后复习。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="x00-序言">0x00 序言</h1>
+<p>刚学pwn，做了两道攻防世界的pwn新手训练，真的是啥也不会，第一道题是连上就有flag我都不知道咋连，就菜到这种地步。一个格式化字符串漏洞看了一天。看了很多博客，最后终于弄明白了，感觉很多博客都对新手不是那么友好，刚学完，总结梳理一下，便于复习。也希望自己写的能帮到其他像我一样刚开始学的小白更快更清楚的明白格式化字符串漏洞。</p>
+<h1 id="x01-格式化字符串">0x01 格式化字符串</h1>
+<p>格式化字符串漏洞针对的是printf()函数，所以有必要先深入了解一下printf()函数和什么是格式化字符串。</p>
+<p>首先让我们来看一下格式化字符串。</p>
+<p>学过C的都知道printf()，在输出某个变量的时候我们一般会这样写:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> a = <span class="number">100</span>;</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;%d&quot;</span>,a);</span><br><span class="line"><span class="comment">// 100</span></span><br></pre></td></tr></table></figure>
+<p>这里的<code>%d</code>，实际上就是所谓的格式化字符串，维基百科是这样定义的：</p>
+<blockquote>
+<p>格式化字符串（英语：format
+string），是一些程序设计语言在格式化输出API函数中用于指定输出参数的格式与相对位置的字符串参数，例如C、C++等程序设计语言的printf类函数，其中的转换说明（conversion
+specification）用于把随后对应的0个或多个函数参数转换为相应的格式输出；格式化字符串中转换说明以外的其它字符原样输出。</p>
+</blockquote>
+<p>在我理解，就是你规定要输出的字符串的格式和位置，比如%d就是十进制整数格式，%s就是字符串格式，%x就是十六进制数格式等等。</p>
+<p>再比如：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;Hello, %s&quot;</span>, <span class="string">&quot;Winny&quot;</span>);</span><br><span class="line"><span class="comment">// Hello, Winny</span></span><br></pre></td></tr></table></figure>
+<p>%s告诉程序：“你应该在‘Hello,
+’后面按照字符串格式来输出这个参数！”然后程序就乖乖的按照格式化字符串的要求输出了这个参数。这就是格式化字符串的作用。</p>
+<p>比较常见和基本的格式化字符串有这么几个：</p>
+<table>
+<colgroup>
+<col style="width: 9%" />
+<col style="width: 90%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>字符</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>%d</td>
+<td>输出10进制整数</td>
+</tr>
+<tr class="even">
+<td>%c</td>
+<td>输出字符</td>
+</tr>
+<tr class="odd">
+<td>%s</td>
+<td>输出内存中的字符串，内存中存的是字符串所在的地址</td>
+</tr>
+<tr class="even">
+<td>%x</td>
+<td>输出十六进制数据</td>
+</tr>
+<tr class="odd">
+<td>%p</td>
+<td>输出十六进制数据，区别是有前缀“0x”，实际上就是输出个指针，所以32位输出4字节，64位输出8字节</td>
+</tr>
+<tr class="even">
+<td><strong>%n</strong></td>
+<td>将printf已经打印的字符个数赋值给指定的内存地址中</td>
+</tr>
+</tbody>
+</table>
+<p>实际上，这只是最简单的用法，格式化占位符的语法是：</p>
+<p><code>%[parameter][flags][field width][.precision][length]type</code></p>
+<p>d、c、s、x、p、n这些都是type。flags、field
+width、.precision、length这些不是很重要，这里就不说了。有兴趣可以在<a
+target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2#%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%8D%A0%E4%BD%8D%E7%AC%A6">维基百科</a>上看，这里说一下parameter。</p>
+<p>Parameter可以忽略，也可以是:</p>
+<table>
+<thead>
+<tr class="header">
+<th>字符</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>n$</td>
+<td>输出第n个参数</td>
+</tr>
+</tbody>
+</table>
+<p>比如看下面的代码：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;the third is %3$d, the first is %1$d&quot;</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>);</span><br><span class="line"><span class="comment">// the third is 3, the first is 1</span></span><br></pre></td></tr></table></figure>
+<p>可以看到，程序输出了第三个和第一个参数。至于n$有什么用，后面就会讲到。</p>
+<p>回到上面的格式化字符串，最后的%n可能有的人看完描述觉得有点蒙，咱来举个栗子。在看代码之前，先插播一下，由于这个漏洞windows好像是有保护机制的，所以为了演示我所有的代码都在ubuntu上运行，同时编译时候按32位编译（我的ubuntu是64位的）。</p>
+<p>编译命令为:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -m32 test.c -o test</span><br></pre></td></tr></table></figure>
+<p>其中<code>-m32</code>就是按32位编译，要想在ubuntu上用<code>-m32</code>，先安装以下的库：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install build-essential module-assistant</span><br><span class="line">sudo apt-get install gcc-multilib g++-multilib</span><br></pre></td></tr></table></figure>
+<p>运行编译好的文件就在当前文件夹下输入以下命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./test</span><br></pre></td></tr></table></figure>
+<p>好，知道了如何在linux系统下编译运行文件，看下面的代码：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> s = <span class="number">0</span>;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;The value of s is %n&quot;</span>,&amp;s);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>,s);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// The value of s is 18</span></span><br></pre></td></tr></table></figure>
+<p>你会发现s被赋值为了18，因为printf在%n之前已经输出了18个字符：“The
+value of s is
+”（包括空格）然后%n就把18写入了s所在的地址对应的内容，也就是赋给了s。</p>
+<p>现在你应该比刚才清楚一点%n的用法了吧。事实上，如果你敏感，你就会发现通过%n，我们修改了本来不能修改的内存的内容！这是极其危险的一件事！这也是漏洞修改内存值的核心！具体的使用会在漏洞部分详细介绍。</p>
+<h1 id="x02-printf函数">0x02 printf()函数</h1>
+<p>现在我们知道了格式化字符串，再来了解一下printf()。</p>
+<p>printf()是C语言中为数不多的支持可变参数的库函数。就是说你想给printf()传几个参数都可以。根据规定，函数在调用的过程中，传入函数的参数从右到左逐个压入栈中。例如：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">print(<span class="string">&quot;%d %d %d&quot;</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>);</span><br><span class="line"><span class="comment">// 1 2 3</span></span><br></pre></td></tr></table></figure>
+<p>反汇编看的更直观一点：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">push    3</span><br><span class="line">push    2</span><br><span class="line">push    1</span><br><span class="line">lea     edx, (aDDD - 1FD8h)[eax] ; &quot;%d,%d,%d&quot;</span><br><span class="line">push    edx             ; format</span><br><span class="line">mov     ebx, eax</span><br><span class="line">call    _printf</span><br></pre></td></tr></table></figure>
+<p>在这个例子中，我们制定了参数的数量为3和类型为十进制整数，那么printf()就会在栈中向前找三个值并按照十进制整数的形式输出出来。</p>
+<p>还是这个例子，只不过我稍微改变一点：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">print(<span class="string">&quot;%d %d %d&quot;</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>);</span><br><span class="line"><span class="comment">// 1 2 3</span></span><br></pre></td></tr></table></figure>
+<p>反汇编看一下:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">push    5</span><br><span class="line">push    4</span><br><span class="line">push    3</span><br><span class="line">push    2</span><br><span class="line">push    1</span><br><span class="line">lea     edx, (aDDD - 1FD8h)[eax] ; &quot;%d,%d,%d&quot;</span><br><span class="line">push    edx             ; format</span><br><span class="line">mov     ebx, eax</span><br><span class="line">call    _printf</span><br></pre></td></tr></table></figure>
+<p>函数将五个参数都压入了栈中，但是按照format的指示只按照十进制整数的格式打印了前三个参数。</p>
+<p>可以看到，对于可变参数的函数，printf()本身并不知道传入参数的数量，也不知道在函数调用前到底有多少参数被压入栈中，所以它要求传入一个format来告诉它有几个参数，你有几个格式化字符串，printf()就认为你传入了几个参数。并忠实的按照format的指示，以指定的格式在指定位置打印指定数量的参数。</p>
+<p>这就存在一个问题了。假如我们给printf()实际传递的参数数量小于我们所给的format怎么办？例如：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;%d,%d,%d\n&quot;</span>,<span class="number">1</span>,<span class="number">2</span>);</span><br></pre></td></tr></table></figure>
+<p>这时候我们告诉printf()：“我给你传递了三个参数，请把这三个参数安装十进制整数的形式打印出来！”而实际上，我们只给printf()两个参数，那这时候会发生什么呢？先自己思考一下，再往下看。</p>
+<p>运行结果如下：</p>
+<img src="/2019/08/17/CTF/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E6%90%9E%E6%87%82%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/1566005116498-20240607151345852.png" class="" width="1566005116498">
+<p>可以看到除了我们输入的参数1、2以外，printf()还打印出了一个值，这个值是什么呢？这个值就是栈上在保存的我们两个参数之后的第三个值，由于我们告诉printf()我们传了三个参数，所以它就会在栈上向前找三个值。也就是说，通过这种方式，我们可以读取本来不应该被读取到的内存的内容。</p>
+<p>再来看一个例子：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;%x %x %x %x %x %x %x %x %x %x\n&quot;</span>);</span><br></pre></td></tr></table></figure>
+<img src="/2019/08/17/CTF/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E6%90%9E%E6%87%82%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/1566005556194-20240607151345821.png" class="" width="1566005556194">
+<p>可以看到printf()将栈中format后10个内存的内容都以十六进制的形式打印了出来。</p>
+<h1 id="x03-格式化字符串漏洞利用">0x03 格式化字符串漏洞利用</h1>
+<p>有了上面的前期储备，我们就可以来聊聊格式化字符串漏洞的利用了。实际上，这个漏洞的产生可以说是因为程序员的偷懒。比如下面这个简单的程序：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">char</span> str[<span class="number">100</span>];</span><br><span class="line"><span class="built_in">scanf</span>(<span class="string">&quot;%s&quot;</span>,str);</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;%s\n&quot;</span>,str);</span><br></pre></td></tr></table></figure>
+<img src="/2019/08/17/CTF/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E6%90%9E%E6%87%82%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/1566006155661-20240607151345717.png" class="" width="1566006155661">
+<p>这样写是没有问题的。但是有的时候程序员会偷懒，写成这样：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">char</span> str[<span class="number">100</span>];</span><br><span class="line"><span class="built_in">scanf</span>(<span class="string">&quot;%s&quot;</span>,str);</span><br><span class="line"><span class="built_in">printf</span>(str);</span><br></pre></td></tr></table></figure>
+<p>没有format，但是程序也能正常运行。</p>
+<img src="/2019/08/17/CTF/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E6%90%9E%E6%87%82%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/1566006274630-20240607151345821.png" class="" width="1566006274630">
+<p>但是这时候由于没有format，printf()实际上并不知道传入了几个参数，那么如果我们输入：aaa.%x会发生什么呢？</p>
+<img src="/2019/08/17/CTF/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E6%90%9E%E6%87%82%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/1566006429774-20240607151345812.png" class="" width="1566006429774">
+<p>我们发现，printf()打印出来了本来不应该被打印出来的内存中的值。</p>
+<p>这样一来，通过这个漏洞，我们可以实现任意内存的读和写。</p>
+<h2 id="任意内存读取">任意内存读取</h2>
+<p>还是上面这个程序，我们可以用很多个格式化字符串来读取很多个内存地址的内容</p>
+<img src="/2019/08/17/CTF/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E6%90%9E%E6%87%82%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/1566023620247-20240607151345971.png" class="" width="1566023620247">
+<p>也可以通过之前说的n$来读取特定偏移量的内存，比如说我想读取第六个内存中的内容，就可以这样构造：</p>
+<img src="/2019/08/17/CTF/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E6%90%9E%E6%87%82%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/1566023730070-20240607151345813.png" class="" width="1566023730070">
+<p>现在我们就读取到了栈中第六个内存地址中的内容。实际上41就是A的十六进制ASCII码，这个地址中存的就是我们输入的“AAAA”（注意，并不是说printf()一直会把输入的内容存到偏移量为6的内存中，只是在这里是如此，具体存到偏移量为几的内存中需要我们自己通过构造很多个%x去找）。</p>
+<p>通过%x可以读取内存中的值，通过%s可以读取以内存中的值为地址的字符串。</p>
+<p>比如上面如果你用%s，你就会读取0x41414141为首地址上对应的字符串（如果有的话），如果该地址上没有，就会报段错误Segmentation
+fault。</p>
+<img src="/2019/08/17/CTF/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E6%90%9E%E6%87%82%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/1566024610292-20240607151345978.png" class="" width="1566024610292">
+<p>这实际上是因为访问了不可访问的内存。例如该内存已经超过了系统所给这个程序的内存空间。我们要访问0x41414141，结果这个程序根本没有这个地址，那当然会报错啦。或者是这个内存是受系统保护的，我们不能访问。</p>
+<p>我们再举一个%s的例子，在开始实验前，首先你要确保关闭了linux的内存地址随机化机制，否则每次运行程序，数据的地址都不一样，无法进行实验。关闭方法：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo 0 &gt; /proc/sys/kernel/randomize_va_space</span><br></pre></td></tr></table></figure>
+<p>关闭了之后就可以愉快的开始我们的实验了。我们看这个程序：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc,<span class="type">char</span> **argv)</span></span><br><span class="line">&#123;</span><br><span class="line">        <span class="type">char</span> str[<span class="number">100</span>];</span><br><span class="line">        <span class="type">char</span> s[<span class="number">10</span>]=<span class="string">&quot;hello pwn!&quot;</span>;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;%x\n&quot;</span>,&amp;s);</span><br><span class="line">        <span class="built_in">strcpy</span>(str,argv[<span class="number">1</span>]);</span><br><span class="line">        <span class="built_in">printf</span>(str);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里没有输出s的内容，如果我们想看到s的内容，那我们就可以通过格式化字符串漏洞达到目的。</p>
+<p>攻击思路：首先我们看看“hello
+pwn!”所在的地址是什么，然后我们通过构造输入把这个地址存到内存中，再通过%s来读取“hello
+pwn!”。</p>
+<p>构造地址可以通过输入字符串，让内存中存字符串对应的ASCII码这种方法来构造，比如如果要让内存中的值为44434241我们就可以输入ABCD（A的十六进制ASCII码为41，在内存中以十六进制存储且为小端序存储，所以41在最右边）。</p>
+<p>但是如果地址像ff1b6800这样，那么我们就没法通过这种方式进行构造，因为我们很难找到该ASCII码对应的字符串并输入。这时候我们就要用到printf命令，将shellcode转义（直接输入<code>\x00\x68\x1b\xff</code>这样)。使用的时候把printf命令用反引号括起来。但是<strong>注意如果是用scanf输入字符串，则没法使用printf命令，而且scanf和命令行输入的shellcode没法被直接转义</strong>。因此，我们给的例子是使用strcpy赋值。</p>
+<p>那么我们开始构造输入：</p>
+<img src="/2019/08/17/CTF/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E6%90%9E%E6%87%82%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/1566029291179-20240607151345980.png" class="" width="1566029291179">
+<p>通过构造输入，我们成功改变了内存为ffffd4fe（偏移量是14）。</p>
+<p><strong>注意</strong>：这个程序没写好，如果输入参数个数不同，s的地址也会变化，比如我输入"`printf
+""`.%x"时输出的就不是ffffd4fe而是ffffd52e。所以传入的参数数量需要固定，这一点需要注意。实际上，把s设置成静态的（在s前加static）就可以解决问题。下一个例子就改正这个问题。</p>
+<p>现在我们已经可以把偏移量为12的内存中的值变成s所对应的内存地址，那么我们把最后一个改成%s，即输出该内存值对应的地址中的字符串。</p>
+<img src="/2019/08/17/CTF/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E6%90%9E%E6%87%82%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/1566029414006-20240607151346062.png" class="" width="1566029414006">
+<p>可以看到我们成功的读取出了s的内容。</p>
+<h2 id="任意内存修改">任意内存修改</h2>
+<p>光读取还不够，最重要的是我们可以任意的对内存进行修改，这才是这个漏洞最可怕的地方。修改的方法其实上面已经说到一些了，那就是通过%n。</p>
+<p>看一个例子：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc,<span class="type">char</span> **argv)</span></span><br><span class="line">&#123;</span><br><span class="line">		<span class="type">char</span> str[<span class="number">100</span>];</span><br><span class="line">        <span class="type">static</span> <span class="type">int</span> a = <span class="number">0</span>;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;%x\n&quot;</span>,&amp;a);</span><br><span class="line">        <span class="built_in">strcpy</span>(str,argv[<span class="number">1</span>]);</span><br><span class="line">        <span class="built_in">printf</span>(str);</span><br><span class="line">    	<span class="built_in">printf</span>(<span class="string">&quot;\n%d\n&quot;</span>,a);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们的目标是修改a的值。先运行一下看看正常情况下是什么情况</p>
+<img src="/2019/08/17/CTF/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E6%90%9E%E6%87%82%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/1566032185561-20240607151345873.png" class="" width="1566032185561">
+<p>可以看到a为初始值0，那么下面开始构造：</p>
+<img src="/2019/08/17/CTF/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E6%90%9E%E6%87%82%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/1566032317311-20240607151346031.png" class="" width="1566032317311">
+<p>可以看到偏移量为10，把最后的换成%n</p>
+<img src="/2019/08/17/CTF/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E6%90%9E%E6%87%82%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/1566032384441-20240607151345979.png" class="" width="1566032384441">
+<p>可以看到我们成功的改变了a的值，86是因为0c占一个字符，所以四个数有四个字符，“.”占一个字符，%x占8个字符，一共10个“.”，9个%x，最终加起来在%n前面一共输出了86个字符，所以是86。</p>
+<p>如果要用n$的话，记得要在前面加反斜杠：</p>
+<img src="/2019/08/17/CTF/%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%E6%90%9E%E6%87%82%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E/1566033484942-20240607151346132.png" class="" width="1566033484942">
+<p>最后在附上一个我自己写的小脚本，用来构造地址的，比如说要构造41414141，那么你需要输入的字符串就是AAAA。这个小脚本就是告诉你需要输入的字符串是什么，只需要你填入要构造的地址就行了。（如果ASCII码比较奇怪的可能就不行了，比如ASCII码是0x0B什么的）</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">Author: Winny</span></span><br><span class="line"><span class="string">Date: 2019.08.16</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">pocstr</span>(<span class="params">addr</span>):</span><br><span class="line">    frag = []</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, <span class="built_in">len</span>(addr), <span class="number">2</span>):</span><br><span class="line">        frag.append(<span class="built_in">int</span>(<span class="built_in">str</span>(<span class="string">&#x27;0x&#x27;</span>) + addr[j:j+<span class="number">2</span>], <span class="number">16</span>))</span><br><span class="line">    frag = frag[::-<span class="number">1</span>]</span><br><span class="line">    <span class="keyword">for</span> s <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(frag)):</span><br><span class="line">        <span class="built_in">print</span>(<span class="built_in">chr</span>(frag[s]), end=<span class="string">&#x27;&#x27;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">pocstr(<span class="string">&#x27;41414141&#x27;</span>)</span><br><span class="line"><span class="comment">#输出结果：AAAA</span></span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/CTF/" rel="tag"># CTF</a>
+              <a href="/tags/pwn/" rel="tag"># pwn</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2019/08/15/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E9%80%86%E5%90%91%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/" rel="prev" title="攻防世界逆向新手训练">
+                  <i class="fa fa-angle-left"></i> 攻防世界逆向新手训练
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2019/08/29/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/" rel="next" title="攻防世界pwn新手训练">
+                  攻防世界pwn新手训练 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Winny</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.2.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"winny1001.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":"ture","version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"fold":{"enable":true,"height":400},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="计算机组成原理学习笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="计组学习笔记">
+<meta property="og:url" content="https://winny1001.github.io/2019/10/10/Lecture/%E8%AE%A1%E7%BB%84%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:site_name" content="Winny的一亩三分地">
+<meta property="og:description" content="计算机组成原理学习笔记">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://winny1001.github.io/2019/10/10/Lecture/%E8%AE%A1%E7%BB%84%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/1569485100489.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/10/10/Lecture/%E8%AE%A1%E7%BB%84%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/e9ab9ad3098a7206c675b9040902689a.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/10/10/Lecture/%E8%AE%A1%E7%BB%84%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/1569486286259.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/10/10/Lecture/%E8%AE%A1%E7%BB%84%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/1570161714029.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/10/10/Lecture/%E8%AE%A1%E7%BB%84%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/1569429593275.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/10/10/Lecture/%E8%AE%A1%E7%BB%84%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/1569429691999.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/10/10/Lecture/%E8%AE%A1%E7%BB%84%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/1569430434590.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/10/10/Lecture/%E8%AE%A1%E7%BB%84%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/1569466709850.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/10/10/Lecture/%E8%AE%A1%E7%BB%84%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/1569466311308.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/10/10/Lecture/%E8%AE%A1%E7%BB%84%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/1570187921133.png">
+<meta property="article:published_time" content="2019-10-10T14:24:32.000Z">
+<meta property="article:modified_time" content="2024-06-11T07:17:24.079Z">
+<meta property="article:author" content="Winny">
+<meta property="article:tag" content="计组">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://winny1001.github.io/2019/10/10/Lecture/%E8%AE%A1%E7%BB%84%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/1569485100489.png">
+
+
+<link rel="canonical" href="https://winny1001.github.io/2019/10/10/Lecture/%E8%AE%A1%E7%BB%84%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://winny1001.github.io/2019/10/10/Lecture/%E8%AE%A1%E7%BB%84%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/","path":"2019/10/10/Lecture/计组学习笔记/","title":"计组学习笔记"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>计组学习笔记 | Winny的一亩三分地</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Winny的一亩三分地</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description"> Imagination will take you everywhere</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E7%AB%A0%E6%A6%82%E8%AE%BA"><span class="nav-number">1.</span> <span class="nav-text">第一章：概论</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E7%BB%84%E6%88%90"><span class="nav-number">1.1.</span> <span class="nav-text">计算机系统组成</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%B1%82%E6%AC%A1%E7%BB%93%E6%9E%84"><span class="nav-number">1.2.</span> <span class="nav-text">计算机系统的层次结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%98%E5%82%A8%E7%A8%8B%E5%BA%8F%E8%AE%A1%E7%AE%97%E6%9C%BA"><span class="nav-number">1.3.</span> <span class="nav-text">存储程序计算机</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%98%E5%82%A8%E7%A8%8B%E5%BA%8F%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%89%B9%E7%82%B9"><span class="nav-number">1.3.1.</span> <span class="nav-text">存储程序计算机特点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A1%AC%E4%BB%B6%E7%BB%84%E6%88%90"><span class="nav-number">1.4.</span> <span class="nav-text">计算机硬件组成</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BA%BF%E7%BB%93%E6%9E%84"><span class="nav-number">1.4.1.</span> <span class="nav-text">总线结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA"><span class="nav-number">1.4.2.</span> <span class="nav-text">输入输出</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E5%AD%98%E5%82%A8%E5%99%A8"><span class="nav-number">1.4.3.</span> <span class="nav-text">主存储器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A7%E5%88%B6%E5%99%A8"><span class="nav-number">1.4.4.</span> <span class="nav-text">控制器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E7%AE%97%E5%99%A8"><span class="nav-number">1.4.5.</span> <span class="nav-text">运算器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A8%8B%E5%BA%8F%E8%BF%90%E8%A1%8C"><span class="nav-number">1.5.</span> <span class="nav-text">计算机程序运行</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A1%AC%E4%BB%B6%E8%BF%90%E8%A1%8C%E7%A8%8B%E5%BA%8F%E7%9A%84%E5%BF%85%E8%A6%81%E6%9D%A1%E4%BB%B6"><span class="nav-number">1.5.1.</span> <span class="nav-text">硬件运行程序的必要条件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B"><span class="nav-number">1.5.2.</span> <span class="nav-text">运行过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%96%E6%8C%87%E4%BB%A4%E5%88%86%E6%9E%90%E6%8C%87%E4%BB%A4"><span class="nav-number">1.5.3.</span> <span class="nav-text">取指令、分析指令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E6%8C%87%E4%BB%A4"><span class="nav-number">1.5.4.</span> <span class="nav-text">执行指令</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD"><span class="nav-number">1.6.</span> <span class="nav-text">计算机系统性能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%90%E7%AE%97%E9%80%9F%E5%BA%A6"><span class="nav-number">1.7.</span> <span class="nav-text">运算速度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%97%E5%AD%97%E8%8A%82%E4%BD%8D%E7%9A%84%E5%85%B3%E7%B3%BB%E4%B8%8E%E5%8C%BA%E5%88%AB"><span class="nav-number">1.8.</span> <span class="nav-text">字、字节、位的关系与区别</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%8Dbit"><span class="nav-number">1.8.1.</span> <span class="nav-text">位（bit）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%97%E8%8A%82byte"><span class="nav-number">1.8.2.</span> <span class="nav-text">字节（Byte）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%97word"><span class="nav-number">1.8.3.</span> <span class="nav-text">字（word）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#kbmbgb%E5%88%B0%E5%BA%95%E6%98%AF10%E6%AC%A1%E5%B9%82%E8%BF%98%E6%98%AF2%E6%AC%A1%E5%B9%82"><span class="nav-number">1.9.</span> <span class="nav-text">KB、MB、GB……到底是10次幂还是2次幂</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E7%AB%A0%E4%BE%8B%E9%A2%98"><span class="nav-number">1.10.</span> <span class="nav-text">第一章例题</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E7%AB%A0%E6%8C%87%E4%BB%A4%E7%B3%BB%E7%BB%9F"><span class="nav-number">2.</span> <span class="nav-text">第二章：指令系统</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BB%E5%AD%98%E7%BC%96%E5%9D%80%E6%96%B9%E5%BC%8F"><span class="nav-number">2.1.</span> <span class="nav-text">主存编址方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%89%E5%AD%97%E7%BC%96%E5%9D%80%E6%96%B9%E5%BC%8F"><span class="nav-number">2.1.1.</span> <span class="nav-text">按字编址方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%89%E5%AD%97%E8%8A%82%E7%BC%96%E5%9D%80%E6%96%B9%E5%BC%8F"><span class="nav-number">2.1.2.</span> <span class="nav-text">按字节编址方式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%97%E8%8A%82%E7%BC%96%E5%9D%80%E7%BC%96%E5%9D%80%E9%A1%BA%E5%BA%8F"><span class="nav-number">2.1.2.1.</span> <span class="nav-text">字节编址编址顺序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%97%E8%8A%82%E7%BC%96%E5%9D%80%E8%BE%B9%E7%95%8C%E9%97%AE%E9%A2%98"><span class="nav-number">2.1.2.2.</span> <span class="nav-text">字节编址边界问题</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%97%E7%BC%96%E5%9D%80%E5%92%8C%E5%AD%97%E8%8A%82%E7%BC%96%E5%9D%80%E7%9A%84%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="nav-number">2.1.3.</span> <span class="nav-text">字编址和字节编址的优缺点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BB%E5%AD%98%E7%BB%93%E6%9E%84"><span class="nav-number">2.2.</span> <span class="nav-text">主存结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%98%E5%82%A8%E4%BD%93%E7%BB%93%E6%9E%84"><span class="nav-number">2.2.1.</span> <span class="nav-text">存储体结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%98%E5%82%A8%E5%8D%95%E5%85%83"><span class="nav-number">2.2.2.</span> <span class="nav-text">存储单元</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BB%E5%AD%98%E6%80%A7%E8%83%BD%E6%8C%87%E6%A0%87"><span class="nav-number">2.3.</span> <span class="nav-text">主存性能指标</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%98%E5%82%A8%E5%AE%B9%E9%87%8F"><span class="nav-number">2.3.1.</span> <span class="nav-text">存储容量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%98%E5%8F%96%E9%80%9F%E5%BA%A6"><span class="nav-number">2.3.2.</span> <span class="nav-text">存取速度</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%98%E5%8F%96%E6%97%B6%E9%97%B4"><span class="nav-number">2.3.2.1.</span> <span class="nav-text">存取时间</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%98%E5%8F%96%E5%91%A8%E6%9C%9F"><span class="nav-number">2.3.2.2.</span> <span class="nav-text">存取周期</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%98%E5%82%A8%E5%99%A8%E5%B8%A6%E5%AE%BD"><span class="nav-number">2.3.3.</span> <span class="nav-text">存储器带宽</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%BA%E5%99%A8%E5%AD%97%E9%95%BF%E5%AD%98%E5%82%A8%E5%AD%97%E9%95%BF%E6%8C%87%E4%BB%A4%E5%AD%97%E9%95%BF%E6%95%B0%E6%8D%AE%E5%AD%97%E9%95%BF%E7%9A%84%E5%85%B3%E7%B3%BB%E4%B8%8E%E5%8C%BA%E5%88%AB"><span class="nav-number">2.4.</span> <span class="nav-text">机器字长、存储字长、指令字长、数据字长的关系与区别</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%BA%E5%99%A8%E5%AD%97%E9%95%BF"><span class="nav-number">2.4.1.</span> <span class="nav-text">机器字长</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%98%E5%82%A8%E5%AD%97%E9%95%BF"><span class="nav-number">2.4.2.</span> <span class="nav-text">存储字长</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%87%E4%BB%A4%E5%AD%97%E9%95%BF"><span class="nav-number">2.4.3.</span> <span class="nav-text">指令字长</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%AD%97%E9%95%BF"><span class="nav-number">2.4.4.</span> <span class="nav-text">数据字长</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8C%87%E4%BB%A4%E6%A0%BC%E5%BC%8F"><span class="nav-number">2.5.</span> <span class="nav-text">指令格式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8C%87%E4%BB%A4%E7%BB%93%E6%9E%84"><span class="nav-number">2.6.</span> <span class="nav-text">指令结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#cpu%E7%BB%93%E6%9E%84"><span class="nav-number">2.6.1.</span> <span class="nav-text">CPU结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%89%E5%9C%B0%E5%9D%80%E7%A0%81%E4%B8%AA%E6%95%B0%E5%88%86%E7%B1%BB"><span class="nav-number">2.6.2.</span> <span class="nav-text">按地址码个数分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E7%A0%81%E5%AD%97%E6%AE%B5"><span class="nav-number">2.6.3.</span> <span class="nav-text">操作码字段</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E7%A0%81%E6%89%A9%E5%B1%95%E6%8A%80%E6%9C%AF"><span class="nav-number">2.7.</span> <span class="nav-text">操作码扩展技术</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Winny</p>
+  <div class="site-description" itemprop="description">因为热爱，所以折腾</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/winny1001" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;winny1001" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="Back to top">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://winny1001.github.io/2019/10/10/Lecture/%E8%AE%A1%E7%BB%84%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Winny">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Winny的一亩三分地">
+      <meta itemprop="description" content="因为热爱，所以折腾">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="计组学习笔记 | Winny的一亩三分地">
+      <meta itemprop="description" content="计算机组成原理学习笔记">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          计组学习笔记
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2019-10-10 23:24:32" itemprop="dateCreated datePublished" datetime="2019-10-10T23:24:32+09:00">2019-10-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-06-11 16:17:24" itemprop="dateModified" datetime="2024-06-11T16:17:24+09:00">2024-06-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Study/" itemprop="url" rel="index"><span itemprop="name">Study</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Study/Lecture/" itemprop="url" rel="index"><span itemprop="name">Lecture</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">计算机组成原理学习笔记</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="第一章概论">第一章：概论</h1>
+<h2 id="计算机系统组成">计算机系统组成</h2>
+<p>软件+硬件=计算机系统</p>
+<p>硬件和软件相辅相成，相互依存，缺一不可。</p>
+<p>软硬件相互依存，协同发展，在逻辑上等价。</p>
+<h2 id="计算机系统的层次结构">计算机系统的层次结构</h2>
+<p>不同层次的使用者看到的计算机功能属性也不同。</p>
+<h2 id="存储程序计算机">存储程序计算机</h2>
+<h3 id="存储程序计算机特点">存储程序计算机特点</h3>
+<ul>
+<li>由运算器、控制器、存储器、输入设备和输出设备五大部件组成</li>
+<li>指令和数据均用二进制数表示</li>
+<li>指令和数据以同等地位存放于存储器内，并可按地址访问</li>
+<li>指令由操作码和地址码组成</li>
+<li>指令在存储器内按顺序存放（下一条指令放在IP中）</li>
+</ul>
+<h2 id="计算机硬件组成">计算机硬件组成</h2>
+<h3 id="总线结构">总线结构</h3>
+<p>现代计算机大多采用总线结构，总线将计算机各部件连接在一起，形成为一个完整的计算机硬件系统。总线也成为各部件间传输信息的公共通道。</p>
+<h3 id="输入输出">输入输出</h3>
+<p>I/O 子系统完成人—机交互功能。包括各种I/O
+设备及相应的接口。设备通过接口与主机联系，接收控制器发来的各种控制命令，并完成相应的操作。</p>
+<p>输入设备：将人们熟悉的信息形式转换为机器能识别的信息形式</p>
+<p>输出设备：将机器运算结果转换为人们熟悉的信息形式</p>
+<p>注意显卡也是I/O设备。</p>
+<h3 id="主存储器">主存储器</h3>
+<p>主存储器（简称主存）是计算机的主要工作存储器，存放正在运行的程序和数据。主存包括存储体、各种逻辑部件及控制电路等。</p>
+<h3 id="控制器">控制器</h3>
+<p>由程序计数器PC、指令寄存器IR 、时序逻辑以及控制单元CU 组成。</p>
+<p>是计算机的指挥中心，由它发出控制命令。</p>
+<p><img src="/2019/10/10/Lecture/计组学习笔记/1569485100489.png"  alt="1569485100489" style="zoom:65%;" /></p>
+<h3 id="运算器">运算器</h3>
+<p>进行数据加工处理。核心是算术逻辑运算单元ALU，还包含一些寄存器，用来暂存参与运算的数据以及运算结果。</p>
+<h2 id="计算机程序运行">计算机程序运行</h2>
+<h3 id="硬件运行程序的必要条件">硬件运行程序的必要条件</h3>
+<p>程序已被转换为机器指令序列，即可执行程序</p>
+<p>可执行程序已经加载到主存储器中，并将起始地址置于PC</p>
+<h3 id="运行过程">运行过程</h3>
+<img src="/2019/10/10/Lecture/%E8%AE%A1%E7%BB%84%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/e9ab9ad3098a7206c675b9040902689a.png" class="">
+<h3 id="取指令分析指令">取指令、分析指令</h3>
+<p><img src="/2019/10/10/Lecture/计组学习笔记/1569486286259.png"  alt="1569486286259" style="zoom:67%;" /></p>
+<h3 id="执行指令">执行指令</h3>
+<p><img src="/2019/10/10/Lecture/计组学习笔记/1570161714029.png"  alt="1570161714029" style="zoom:67%;" /></p>
+<h2 id="计算机系统性能">计算机系统性能</h2>
+<p>性能 = 功能 + 质量</p>
+<p>硬件子系统性能和软件子系统性能共同决定一台计算机系统的性能。</p>
+<p>计算机系统的性能只能通过各类软件在硬件上运行而体现出来。</p>
+<h2 id="运算速度">运算速度</h2>
+<p>吉普森法：</p>
+<p><span class="math display">\[T_{M} =\displaystyle\sum_{i=1}^{n}
+f_it_i\]</span></p>
+<p>TM —— 程序综合运行时间</p>
+<p>fi ——第 i 种指令占程序全部指令的百分比数</p>
+<p>ti —— 第 i 种指令的执行时间</p>
+<p>常用单位：</p>
+<ul>
+<li>MIPS 每秒执行百万条指令数</li>
+<li>CPI 执行一条指令所需的时钟周期数</li>
+<li>FLOPS 每秒浮点运算次数</li>
+</ul>
+<h2 id="字字节位的关系与区别">字、字节、位的关系与区别</h2>
+<h3 id="位bit">位（bit）</h3>
+<p>位又叫比特，是计算机存储的<strong>最小单位</strong>。</p>
+<p>1、0表示一位，00、01、10、11表示两位，以此类推。所以n位可以表示2^n种状态。</p>
+<h3 id="字节byte">字节（Byte）</h3>
+<p>字节是计算机存储中处理数据的<strong>基本单位</strong>。</p>
+<p>一个字节一般规定等于8位，因此一个字节的范围就是00000000b~11111111b（b表示二进制），即1B=8b。</p>
+<h3 id="字word">字（word）</h3>
+<p>字是计算机一次处理数据的<strong>最大单位</strong>。</p>
+<p>计算机中大多数寄存器的大小是一个字长。也就是说计算机一次可以处理一个字的数据。</p>
+<p>字和字长的关系<strong>不是固定</strong>的，一般等于字节的整数倍。</p>
+<p>64位计算机就说明计算机的机器字长为64位，一次可以处理64位的数据，也就是8字节的数据。</p>
+<p>需要注意的是，有种说法是一个字规定为两个字节。这是因为早期8086是16位的，那时候一个字就是两个字节。后来8086发展出了32位，这时候一个字到底是32位还是16位就说不清楚了，为了不混淆，就硬性规定了一个字为两个字节，而把32位的叫双字，后来64位的叫四字。<strong>但是在计组这门课中，字还是根据机器字长来决定</strong>。</p>
+<h2
+id="kbmbgb到底是10次幂还是2次幂">KB、MB、GB……到底是10次幂还是2次幂</h2>
+<p>存储器以二进制计算容量，最小单位是Byte，简写为B。实际上，标准二进制乘数词头（也就是2次幂）的缩写为Ki、Mi、Gi……</p>
+<ul>
+<li>1KiB = 1024B = 2^10B（Byte）</li>
+<li>1MiB = 1024KiB = 2^20B</li>
+</ul>
+<p>而K，M、G等词头则是国际单位制，也就是按10次幂计算</p>
+<ul>
+<li>1KB = 1000B = 10^3B</li>
+<li>1MB = 1000KB = 10^6B</li>
+</ul>
+<p><strong>但是</strong>，二进制乘数词头没有被广泛采用，标识为4GB的内存实际上已经是4GiB。</p>
+<p>因此，在以后遇到计算容量，就按2次幂计算。但是特别注意在计算存储器带宽时还是用10次幂计算。</p>
+<h2 id="第一章例题">第一章例题</h2>
+<p>Q：你如何理解硬、软件逻辑等价性？</p>
+<p>A：</p>
+<ul>
+<li>计算机系统结构中，除最基本的功能必须由硬件实现外，其余功能既可以由硬件实现，也可以由软件实现。</li>
+<li>对某个特定功能来说，由硬件还是软件实现后所能到达的计算机系统的性能是有差异的。</li>
+<li>通常，某个特定的功能由硬件实现比用软件实现的执行速度快，但是成本高。软件实现的灵活性好。</li>
+</ul>
+<p>Q：存储程序计算机中，CPU正在执行的程序所包含的指令和数据均以二进制形式存储于主存储器，CPU需要区分指令和数据吗？为什么？CPU如何区分？</p>
+<p>A：</p>
+<ul>
+<li>需要区分。</li>
+<li>因为CPU将指令和数据从存储器中取出后要进行不同的操作。取出指令后放到指令寄存器IR中，然后进行指令译码等操作。而取出数据后放到数据寄存器中，进行算数/逻辑等操作。</li>
+<li>CPU通过不同的时间段来区分指令和数据。取指周期取出的即为指令，执行周期取出的即为数据。</li>
+</ul>
+<p>Q：讨论将程序和数据存放在同一存储器中的优缺点。</p>
+<p>A：</p>
+<ul>
+<li>优点：主存只有一个地址空间，编程简单，管理容易，空间利用率高。</li>
+<li>缺点：指令与数据共享存储器访问总线，效率较低。</li>
+</ul>
+<p>Q：存储程序计算机中，指令在主存中按顺序存放，其优点是什么？</p>
+<p>A：</p>
+<ul>
+<li>可以较为方便地按顺序存放和按顺序读取和执行。</li>
+<li>顺序执行时指令寻址可以PC自增完成。</li>
+<li>顺序执行时，指令中不需要给出下一条指令的地址，有利于缩短指令字长度。</li>
+</ul>
+<h1 id="第二章指令系统">第二章：指令系统</h1>
+<p>要想学习指令系统，首先要了解指令是如何存放在电脑中的。要想学习指令存储的知识，首先要了解主存储器。</p>
+<h2 id="主存编址方式">主存编址方式</h2>
+<p>主存单元的地址编排方式。编址方式决定了主存的<strong>能被CPU访问的最小单位</strong>.</p>
+<h3 id="按字编址方式">按<strong>字</strong>编址方式</h3>
+<ul>
+<li>主存的最小编址单位是一个字。</li>
+<li>对主存数据的访问只能以字为单位。</li>
+</ul>
+<h3 id="按字节编址方式">按<strong>字节</strong>编址方式</h3>
+<ul>
+<li><p>主存的<strong>最小编址单位</strong>是一个字节。</p></li>
+<li><p>对主存数据的访问既能以字节为单位、也能以字为单位。</p></li>
+<li><p>当CPU按字节访问主存时，用字节地址，当CPU按字访问主存时，用字地址。</p></li>
+<li><p>通常存储字长是字节整数倍</p></li>
+<li><p>字节地址连续，字地址不连续。</p>
+<p>eg：字节地址为0、1、2、3、4、5、6……</p>
+<p>字长为32位，也就是一个字等于四个字节</p>
+<p>则第一个字地址为0，第二个字地址为4，</p>
+<p>往后为8、12、16……</p></li>
+</ul>
+<h4 id="字节编址编址顺序">字节编址编址顺序</h4>
+<ul>
+<li><p>大端序 低地址高字节</p></li>
+<li><p>小端序 低地址低字节</p>
+<p>eg：0x12345678</p>
+<p>大端序：<img src="/2019/10/10/Lecture/%E8%AE%A1%E7%BB%84%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/1569429593275.png" class="" width="1569429593275"></p>
+<p>小端序：<img src="/2019/10/10/Lecture/%E8%AE%A1%E7%BB%84%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/1569429691999.png" class="" width="1569429691999"></p></li>
+</ul>
+<h4 id="字节编址边界问题">字节编址边界问题</h4>
+<ul>
+<li><p>边界对齐 空间有浪费</p></li>
+<li><p>边界不对齐 2次存储器访问</p>
+<p><img src="/2019/10/10/Lecture/计组学习笔记/1569430434590.png"  alt="1569430434590" style="zoom:70%;" /></p></li>
+</ul>
+<h3 id="字编址和字节编址的优缺点">字编址和字节编址的优缺点</h3>
+<p>字编址：</p>
+<ul>
+<li>优点：机器结构简单、操作简便。主要应用于早期的计算机中。</li>
+<li>缺点：数据较短时操作不方便、在非数值应用领域，信息基本寻位是字节，字编址无法支持字节操作。随着机器字长越来越长，字编址的不灵活性越来越突出。</li>
+</ul>
+<p>字节编址：</p>
+<ul>
+<li>优点：兼具字节寻址和字寻址的功能，灵活性好，存储器空间利用率高。</li>
+<li>缺点：机器结构较为复杂。</li>
+</ul>
+<h2 id="主存结构">主存结构</h2>
+<p><img src="/2019/10/10/Lecture/计组学习笔记/1569466709850.png"  alt="1569466709850" style="zoom:67%;" /></p>
+<h3 id="存储体结构">存储体结构</h3>
+<p>存储体由许多存储单元组成，每个存储单元又包含若干个存储元（或称存储元、存储元件），每个存储元能寄存一位二进制代码“0”或“1”。</p>
+<p><img src="/2019/10/10/Lecture/计组学习笔记/1569466311308.png"  alt="1569466311308" style="zoom:70%;" /></p>
+<h3 id="存储单元">存储单元</h3>
+<p>CPU访问存储器的最小单位就是存储单元。每个存储单元都有一个地址，通过地址总线寻址。</p>
+<h2 id="主存性能指标">主存性能指标</h2>
+<h3 id="存储容量">存储容量</h3>
+<p>存储容量=存储单元个数*存储字长（按字编址）
+（注意不要乘开，乘开没有意义）</p>
+<p>存储容量=存储单元个数*存储字长/8=字节数（按字节编址）</p>
+<p>某机可达存储容量上限由地址总线位数确定。</p>
+<p>eg：一个存储器有20根地址总线，8根数据总线，则</p>
+<p>按字编址：2^20×8=2M×8位</p>
+<p>按字节编址：2^20×8/8=2MB字节</p>
+<h3 id="存取速度">存取速度</h3>
+<h4 id="存取时间">存取时间</h4>
+<p>启动一次存储器操作到操作完成所需要的时间。</p>
+<h4 id="存取周期">存取周期</h4>
+<p>存储器连续两次独立操作所需最小时间间隔。</p>
+<p>通常，存取周期&gt;存取时间，存取周期=存取时间+恢复时间</p>
+<h3 id="存储器带宽">存储器带宽</h3>
+<p>单位时间内存储器存取的信息量，单位为字/秒、字节/秒或位/秒。</p>
+<p>存储器带宽=存取周期的倒数</p>
+<p>eg：存取周期500ns，字长16位，则带宽=1字/500ns=2M字/s=4M字节/s=32位/s</p>
+<p>注意：M为10^6，时间单位的转换，同一般公制单位。</p>
+<h2
+id="机器字长存储字长指令字长数据字长的关系与区别">机器字长、存储字长、指令字长、数据字长的关系与区别</h2>
+<h3 id="机器字长">机器字长</h3>
+<p>计算机一次处理的数据的大小，一般就是寄存器的大小，例如一个机器字长为32位，就说明这台计算机一次可以处理32位的数据，它的一个字的长度为32位。通常规定机器字长是2^n倍。</p>
+<h3 id="存储字长">存储字长</h3>
+<p>存储器中一个存储单元中存储的二进制码位数。</p>
+<p>存储器按字节编址时，存储字长为一个字节；按字编址时，存储字长等于机器字长</p>
+<p>早期计算机的存储字长一般和机器的指令字长与数据字长相等，故访问一次主存便可取一条指令或一个数据。随着计算机的发展，往往要求指令字长是可变的，数据字长也要求可变。为了适应指令和数据字长的可变性，其长度不由存储字长来确定，而由字节的个数来表示。</p>
+<h3 id="指令字长">指令字长</h3>
+<p>一条指令中包含的二进制码位数。指令字长=操作码长度+地址码长度*地址码个数</p>
+<p>通常指令字长是字节的整数倍。</p>
+<h3 id="数据字长">数据字长</h3>
+<p>数据字长：计算机数据存储所占用的位数。</p>
+<h2 id="指令格式">指令格式</h2>
+<p>指令 = 操作码 + 地址码</p>
+<p>操作码指出指令要干什么，地址码给出操作对象的位置或者下一条指令的位置</p>
+<h2 id="指令结构">指令结构</h2>
+<p>等长指令字结构：指令字长相等，通常也等于机器字长</p>
+<p>变长指令字结构：指令长度不等</p>
+<h3 id="cpu结构">CPU结构</h3>
+<p><img src="/2019/10/10/Lecture/计组学习笔记/1570187921133.png"  alt="1570187921133" style="zoom:67%;" /></p>
+<h3 id="按地址码个数分类">按地址码个数分类</h3>
+<ul>
+<li><p>三地址指令</p>
+<p>操作码 A1 A2 A3</p>
+<p>操作：A3 ←（A1）OP（A2）</p></li>
+<li><p>二地址指令</p>
+<p>操作码 A1 A2</p>
+<p>操作：A1 ←（A1）OP（A2）</p></li>
+<li><p>一地址指令</p>
+<p>操作码 A</p>
+<p>操作： AC ←（AC）OP（A）</p></li>
+<li><p>零地址指令</p>
+<p>操作码</p>
+<p>操作数来自（送往）堆栈栈顶</p></li>
+</ul>
+<h3 id="操作码字段">操作码字段</h3>
+<ul>
+<li>定长操作码：所有指令的操作码位数相同，并将操作码集中安排在指令字的一个固定的字段中</li>
+<li>变长操作码：各种指令的操作码位数不一致，并且操作码可以分散在指令字的不同字段中</li>
+</ul>
+<h2 id="操作码扩展技术">操作码扩展技术</h2>
+<p><strong>前提</strong>：定长指令字、多种地址码混合用</p>
+<p>可利用地址码个数较少的指令空出的地址码字段，增加操作码的位数（增加能表示的指令个数）</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%AE%A1%E7%BB%84/" rel="tag"># 计组</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2019/09/15/CTF/buuctf-pwn%E5%88%B7%E9%A2%98%E4%B9%8B%E6%97%85/" rel="prev" title="buuctf-pwn刷题之旅">
+                  <i class="fa fa-angle-left"></i> buuctf-pwn刷题之旅
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2019/10/17/Lecture/OS%E5%AE%9E%E9%AA%8C%E4%B9%8B%E7%8E%A9%E8%BD%AClinux%E5%86%85%E6%A0%B8/" rel="next" title="OS实验之玩转linux内核">
+                  OS实验之玩转linux内核 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Winny</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

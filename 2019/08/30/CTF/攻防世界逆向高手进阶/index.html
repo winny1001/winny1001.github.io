@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.2.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"winny1001.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":"ture","version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"fold":{"enable":true,"height":400},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="攻防世界逆向高手进阶，持续更新">
+<meta property="og:type" content="article">
+<meta property="og:title" content="攻防世界逆向高手进阶">
+<meta property="og:url" content="https://winny1001.github.io/2019/08/30/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E9%80%86%E5%90%91%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/index.html">
+<meta property="og:site_name" content="Winny的一亩三分地">
+<meta property="og:description" content="攻防世界逆向高手进阶，持续更新">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/30/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E9%80%86%E5%90%91%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1565588951505.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/30/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E9%80%86%E5%90%91%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/2019-08-12_135045.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/30/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E9%80%86%E5%90%91%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1565589413006.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/30/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E9%80%86%E5%90%91%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1565590696742.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/30/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E9%80%86%E5%90%91%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1565590901116.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/30/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E9%80%86%E5%90%91%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/d5a573d2bb045c61a2ab63ebf563eb72.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/30/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E9%80%86%E5%90%91%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/24c390e308d6959ee3469f7e7d706b88.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/30/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E9%80%86%E5%90%91%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1565595113757.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/30/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E9%80%86%E5%90%91%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/2019-08-12_190525.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/30/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E9%80%86%E5%90%91%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1565608274123.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/30/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E9%80%86%E5%90%91%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1565608360037.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/30/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E9%80%86%E5%90%91%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1565609099770.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/30/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E9%80%86%E5%90%91%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1565609766817.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/30/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E9%80%86%E5%90%91%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1567172093090.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/30/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E9%80%86%E5%90%91%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1567172218601.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/30/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E9%80%86%E5%90%91%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1567172355880.png">
+<meta property="og:image" content="https://winny1001.github.io/2019/08/30/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E9%80%86%E5%90%91%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1567172454937.png">
+<meta property="article:published_time" content="2019-08-30T05:39:17.000Z">
+<meta property="article:modified_time" content="2024-06-11T08:37:09.176Z">
+<meta property="article:author" content="Winny">
+<meta property="article:tag" content="CTF">
+<meta property="article:tag" content="reverse">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://winny1001.github.io/2019/08/30/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E9%80%86%E5%90%91%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1565588951505.png">
+
+
+<link rel="canonical" href="https://winny1001.github.io/2019/08/30/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E9%80%86%E5%90%91%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://winny1001.github.io/2019/08/30/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E9%80%86%E5%90%91%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/","path":"2019/08/30/CTF/攻防世界逆向高手进阶/","title":"攻防世界逆向高手进阶"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>攻防世界逆向高手进阶 | Winny的一亩三分地</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Winny的一亩三分地</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description"> Imagination will take you everywhere</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#dmd-50"><span class="nav-number">1.</span> <span class="nav-text">dmd-50</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%81%9A%E9%A2%98%E5%AE%9E%E5%BD%95"><span class="nav-number">1.1.</span> <span class="nav-text">做题实录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E6%9E%90%E6%80%BB%E7%BB%93"><span class="nav-number">1.2.</span> <span class="nav-text">分析总结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#shuffle"><span class="nav-number">2.</span> <span class="nav-text">Shuffle</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%81%9A%E9%A2%98%E5%AE%9E%E5%BD%95-1"><span class="nav-number">2.1.</span> <span class="nav-text">做题实录</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#re2-cpp-is-awesome"><span class="nav-number">3.</span> <span class="nav-text">re2-cpp-is-awesome</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%81%9A%E9%A2%98%E5%AE%9E%E5%BD%95-2"><span class="nav-number">3.1.</span> <span class="nav-text">做题实录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E6%9E%90%E6%80%BB%E7%BB%93-1"><span class="nav-number">3.2.</span> <span class="nav-text">分析总结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#crackme"><span class="nav-number">4.</span> <span class="nav-text">crackme</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%81%9A%E9%A2%98%E5%AE%9E%E5%BD%95-3"><span class="nav-number">4.1.</span> <span class="nav-text">做题实录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E6%9E%90%E6%80%BB%E7%BB%93-2"><span class="nav-number">4.2.</span> <span class="nav-text">分析总结</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Winny</p>
+  <div class="site-description" itemprop="description">因为热爱，所以折腾</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/winny1001" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;winny1001" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="Back to top">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://winny1001.github.io/2019/08/30/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E9%80%86%E5%90%91%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Winny">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Winny的一亩三分地">
+      <meta itemprop="description" content="因为热爱，所以折腾">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="攻防世界逆向高手进阶 | Winny的一亩三分地">
+      <meta itemprop="description" content="攻防世界逆向高手进阶，持续更新">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          攻防世界逆向高手进阶
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2019-08-30 14:39:17" itemprop="dateCreated datePublished" datetime="2019-08-30T14:39:17+09:00">2019-08-30</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-06-11 17:37:09" itemprop="dateModified" datetime="2024-06-11T17:37:09+09:00">2024-06-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/CTF/" itemprop="url" rel="index"><span itemprop="name">CTF</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/CTF/re/" itemprop="url" rel="index"><span itemprop="name">re</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">攻防世界逆向高手进阶，持续更新</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="dmd-50">dmd-50</h1>
+<h2 id="做题实录">做题实录</h2>
+<p>附件dMd是个64位ELF文件，运行一下，让输入key，随便输入一个，报错。</p>
+<img src="/2019/08/30/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E9%80%86%E5%90%91%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1565588951505.png" class="" width="1565588951505">
+<p>IDA打开看一下</p>
+<img src="/2019/08/30/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E9%80%86%E5%90%91%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/2019-08-12_135045.png" class="" title="2019-08-12_135045">
+<p>直接看if判断，发现字符串<code>780438d5b6e29db0898bc4f0225935c0</code>，分析代码，看到第50行是个MD5加密，所以想到尝试MD5解密上面这个字符串，在这个<a
+target="_blank" rel="noopener" href="https://www.cmd5.com/">网站</a>解密的结果如下：</p>
+<img src="/2019/08/30/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E9%80%86%E5%90%91%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1565589413006.png" class="" width="1565589413006">
+<p>然后我运行程序输入grape，程序报错，好吧，看来没这么简单</p>
+<p>进到MD5函数里看看，也没发现什么</p>
+<img src="/2019/08/30/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E9%80%86%E5%90%91%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1565590696742.png" class="" width="1565590696742">
+<p>做题一度陷入了僵局。后来又进入一个<a
+target="_blank" rel="noopener" href="https://md5.gromweb.com/">解密网站</a>解密，发现居然解密的结果不一样</p>
+<p>这次的结果是</p>
+<img src="/2019/08/30/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E9%80%86%E5%90%91%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1565590901116.png" class="" width="1565590901116">
+<p>运行程序输入b781cbb29054db12f88f08c6e161c199，成功。所以flag就是b781cbb29054db12f88f08c6e161c199。</p>
+<p>后来我发现grape在MD5加密之后就是b781cbb29054db12f88f08c6e161c199，可能第一个网站比较牛逼，直接给你解析到最开始的字符串</p>
+<h2 id="分析总结">分析总结</h2>
+<p>这个就是简单的看源码分析找到MD5解密就行了，没什么难度。</p>
+<h1 id="shuffle">Shuffle</h1>
+<p>题目描述：找到字符串在随机化之前.</p>
+<h2 id="做题实录-1">做题实录</h2>
+<p>这是个32位elf文件，运行跑出来是乱码</p>
+<img src="/2019/08/30/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E9%80%86%E5%90%91%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/d5a573d2bb045c61a2ab63ebf563eb72.png" class="">
+<p>放到IDA里看一下</p>
+<img src="/2019/08/30/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E9%80%86%E5%90%91%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/24c390e308d6959ee3469f7e7d706b88.png" class="">
+<p>这……不说了</p>
+<p>直接出答案SECCON{Welcome to the SECCON 2014 ctf!}</p>
+<h1 id="re2-cpp-is-awesome">re2-cpp-is-awesome</h1>
+<p>题目描述：他们说c++是复杂的，证明他们说的是错的！</p>
+<h2 id="做题实录-2">做题实录</h2>
+<p>上来先一顿基操</p>
+<img src="/2019/08/30/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E9%80%86%E5%90%91%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1565595113757.png" class="" width="1565595113757">
+<p>IDA，开启！进入main函数</p>
+<img src="/2019/08/30/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E9%80%86%E5%90%91%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/2019-08-12_190525.png" class="" title="2019-08-12_190525">
+<p>分析函数，可以发现第35行是主要的判断函数，v9就是我们输入的flag。那么flag的线索就藏在<code>off_6020A0[asc_6020C0[v15]]</code>里，那先看看<code>off_6020A0</code>里是什么吧。</p>
+<img src="/2019/08/30/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E9%80%86%E5%90%91%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1565608274123.png" class="" width="1565608274123">
+<p>看到一个像flag的东西，突然兴奋了起来，不会这么简单吧。继续看</p>
+<img src="/2019/08/30/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E9%80%86%E5%90%91%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1565608360037.png" class="" width="1565608360037">
+<p>好吧，本来以为是flag，但是看到这发现事情果然没有那么简单</p>
+<p>接着看<code>asc_6020C0</code>，发现是一些数据</p>
+<img src="/2019/08/30/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E9%80%86%E5%90%91%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1565609099770.png" class="" width="1565609099770">
+<p>后面其实本来一开始也是db，只不过我改成dd了（按D键），至于为什么要改，是我马后炮做完题才发现的，在写脚本的时候我会说到。</p>
+<p>从分析可以看出flag应该就是从<code>off_6020A0</code>处的str（下文都叫str）中生成的。</p>
+<p>先通过v15找出对应的<code>asc_6020C0</code>中的值，再以<code>asc_6020C0</code>的值为偏移量在str中找对应的字母，最终拼成flag。</p>
+<p>有了这个思路后我就开始试着看一下flag是什么，发现<code>asc_6020C0</code>第一个是“$”，按D键转成ASCII码是24h，数出来是A，接着动态调试一下看看对不对。在判断的地方下断点，然后在<strong>Debugger-&gt;Process
+Option-&gt;Parameters</strong>中填入要输入的参数Adawda（除了开头的A后面是随便填的），开始调试</p>
+<img src="/2019/08/30/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E9%80%86%E5%90%91%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1565609766817.png" class="" width="1565609766817">
+<p>调试中我又下了两个断点，调试之后发现A是对的，那就印证了我的猜想，那下一步就是把所有的字符找出来。</p>
+<p>把<code>asc_6020C0</code>的数据提取出来，我直接按照反汇编的结果写的脚本如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">offset=[<span class="number">36</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">5</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">54</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">00</span>,</span><br><span class="line">		<span class="number">101</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">7</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">39</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">38</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">00</span>,</span><br><span class="line">		<span class="number">45</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">1</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">3</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">00</span>,</span><br><span class="line">		<span class="number">13</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">86</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">1</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">3</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">00</span>,</span><br><span class="line">		<span class="number">101</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">3</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">45</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">22</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">00</span>,</span><br><span class="line">		<span class="number">2</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">21</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">3</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">101</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">00</span>,</span><br><span class="line">		<span class="number">00</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">41</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">68</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">68</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">00</span>,</span><br><span class="line">		<span class="number">1</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">68</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">00</span>,<span class="number">43</span>] <span class="comment">#这是最后字符串的偏移量 注意刚提取出来的时候数都是16进制的，我改成了10进制</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">str</span> = <span class="string">&#x27;L3t_ME_T3ll_Y0u_S0m3th1ng_1mp0rtant_A_&#123;FL4G&#125;_W0nt_b3_3X4ctly_th4t_345y_t0_c4ptur3_H0wev3r_1T_w1ll_b3_C00l_1F_Y0u_g0t_1t&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> eax <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>,<span class="number">31</span>):</span><br><span class="line">	i = offset[eax*<span class="number">4</span>]</span><br><span class="line">	<span class="built_in">print</span>(<span class="built_in">str</span>[i], end = <span class="string">&quot;&quot;</span>)  <span class="comment">#后面的end是让打印不自动换行</span></span><br><span class="line">    </span><br><span class="line"><span class="comment">#得出结果：   ALEXCTF&#123;W3_L0v3_C_W1th_CL45535&#125;</span></span><br></pre></td></tr></table></figure>
+<p>在这一步我卡了好久，因为我在手动把16进制修改成10进制的时候不小心删了个00，然后卡了半天。后来终于发现少了个00补上了但是补错了位置……导致得出了一个这样的flag：<code>ALEXCTF&#123;W3_L0v3LC_W1th_CL45535&#125;</code></p>
+<p>这完全就是一个flag该有的亚子好吗？然后我就怀着激动的心情提交了，然后，系统告诉我，<strong>错了</strong></p>
+<p>所以说：</p>
+<blockquote>
+<p><strong>细心</strong>真的很重要很重要。</p>
+</blockquote>
+<p>不过，我后来发现，特喵的这不是dd双字字形吗，难怪eax要乘4，难怪那么多的0。就因为漏了个0卡了我好久我去</p>
+<p>所以我在写这篇文章的时候才把<code>asc_6020C0</code>的数据用dd表示出来，这样就非常直观简洁了</p>
+<h2 id="分析总结-1">分析总结</h2>
+<p>实际上做完再回过头来再看这道题，可以看出这道题其实并不算难，但是这道题花了我很多的时间，我很早就注意到了<code>off_6020A0[asc_6020C0[v15]]</code>这个关键点，但是当时看到<code>asc_6020C0</code>的不知道是干啥的数据时有点懵逼，最后硬是汇编调试了半天才反应过来，然后就没有顾其他的直接按照汇编语言写脚本了。实际上做完题之后一看到++v15，每次只自增1，就明白了数据是双字存放的，如果当时冷静下来再思考一下，应该就能很快把这道题做出来。</p>
+<p>这个题让我认识到：1.汇编还得好好学。2.IDA真NB，而我连D键咋用都不知道。不行，IDA
+PRO权威指南，打开！3.我确实是个菜狗，还得多做题</p>
+<h1 id="crackme">crackme</h1>
+<h2 id="做题实录-3">做题实录</h2>
+<p>IDA看看源码：</p>
+<img src="/2019/08/30/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E9%80%86%E5%90%91%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1567172093090.png" class="" width="1567172093090">
+<p>根本不知道这是什么玩意儿，看来是加了壳，PEiD看一下有什么。</p>
+<img src="/2019/08/30/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E9%80%86%E5%90%91%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1567172218601.png" class="" width="1567172218601">
+<p>可以看到壳是nSPack
+3.7，那么就先用UnPackNsPack3.7脱壳，脱完壳之后再分析：</p>
+<img src="/2019/08/30/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E9%80%86%E5%90%91%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1567172355880.png" class="" width="1567172355880">
+<p>可以看到就是简单的算法逆向，关键语句是第15句，我们看看Notflag和arg（名字我改过了）：</p>
+<img src="/2019/08/30/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E9%80%86%E5%90%91%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/1567172454937.png" class="" width="1567172454937">
+<p>可以看到Notflag是字符串，arg是一个数组，那么就写个脚本跑出来就行了：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">notflag = <span class="string">&#x27;this_is_not_flag&#x27;</span></span><br><span class="line">arg = [<span class="string">&#x27;12&#x27;</span>, <span class="string">&#x27;4&#x27;</span>, <span class="string">&#x27;8&#x27;</span>, <span class="string">&#x27;14&#x27;</span>, <span class="string">&#x27;24&#x27;</span>, <span class="string">&#x27;5C&#x27;</span>, <span class="string">&#x27;4A&#x27;</span>, <span class="string">&#x27;3D&#x27;</span>, <span class="string">&#x27;56&#x27;</span>, <span class="string">&#x27;0A&#x27;</span>, <span class="string">&#x27;10&#x27;</span>, <span class="string">&#x27;67&#x27;</span>, <span class="string">&#x27;0&#x27;</span>, <span class="string">&#x27;41&#x27;</span>, <span class="string">&#x27;0&#x27;</span>, <span class="string">&#x27;1&#x27;</span>, <span class="string">&#x27;46&#x27;</span>, <span class="string">&#x27;5A&#x27;</span>, <span class="string">&#x27;44&#x27;</span>, <span class="string">&#x27;42&#x27;</span>, <span class="string">&#x27;6E&#x27;</span>,</span><br><span class="line">    ¦  <span class="string">&#x27;0C&#x27;</span>, <span class="string">&#x27;44&#x27;</span>, <span class="string">&#x27;72&#x27;</span>, <span class="string">&#x27;0C&#x27;</span>, <span class="string">&#x27;0D&#x27;</span>, <span class="string">&#x27;40&#x27;</span>, <span class="string">&#x27;3E&#x27;</span>, <span class="string">&#x27;4B&#x27;</span>, <span class="string">&#x27;5F&#x27;</span>, <span class="string">&#x27;2&#x27;</span>, <span class="string">&#x27;1&#x27;</span>, <span class="string">&#x27;4C&#x27;</span>, <span class="string">&#x27;5E&#x27;</span>, <span class="string">&#x27;5B&#x27;</span>, <span class="string">&#x27;17&#x27;</span>, <span class="string">&#x27;6E&#x27;</span>, <span class="string">&#x27;0C&#x27;</span>, <span class="string">&#x27;16&#x27;</span>, <span class="string">&#x27;68&#x27;</span>, <span class="string">&#x27;5B&#x27;</span>, <span class="string">&#x27;12&#x27;</span>]</span><br><span class="line"></span><br><span class="line">arg2 = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(arg)):</span><br><span class="line">    arg2.append(<span class="built_in">int</span>(<span class="built_in">str</span>(<span class="string">&#x27;0x&#x27;</span>) + arg[i],<span class="number">16</span>))</span><br><span class="line"><span class="built_in">print</span>(arg2)</span><br><span class="line"></span><br><span class="line">flag = <span class="string">&#x27;&#x27;</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(arg2)):</span><br><span class="line">   flag += <span class="built_in">chr</span>(arg2[i] ^  <span class="built_in">ord</span>(notflag[i % <span class="number">16</span>]))  </span><br><span class="line"><span class="built_in">print</span>(flag)</span><br><span class="line"><span class="comment">#得出结果：flag&#123;59b8ed8f-af22-11e7-bb4a-3cf862d1ee75&#125;</span></span><br></pre></td></tr></table></figure>
+<h2 id="分析总结-2">分析总结</h2>
+<p>实际上我认为这道题的难点在于脱壳，我直接用了大佬的工具，具体脱壳流程我还不会，还需要继续学习。</p>
+<p>大佬的工具参见这篇文章<a
+target="_blank" rel="noopener" href="https://bbs.pediy.com/thread-115901.htm">《[原创]NsPack 3.7 浅析
+（7.3更新脱壳机和源码）》</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/CTF/" rel="tag"># CTF</a>
+              <a href="/tags/reverse/" rel="tag"># reverse</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2019/08/29/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/" rel="prev" title="攻防世界pwn新手训练">
+                  <i class="fa fa-angle-left"></i> 攻防世界pwn新手训练
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2019/09/13/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cpwn%E9%AB%98%E6%89%8B%E8%BF%9B%E9%98%B6/" rel="next" title="攻防世界pwn高手进阶">
+                  攻防世界pwn高手进阶 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Winny</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>
