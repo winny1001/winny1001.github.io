@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.2.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"winny1001.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":"ture","version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"fold":{"enable":true,"height":400},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="ctfhub系列第二篇，rce之eval与文件包含">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ctfhub技能树_web_RCE之eval、文件包含">
+<meta property="og:url" content="https://winny1001.github.io/2020/07/30/CTF/ctfhub%E6%8A%80%E8%83%BD%E6%A0%91-web-RCE%E4%B9%8Beval%E3%80%81%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/index.html">
+<meta property="og:site_name" content="Winny的一亩三分地">
+<meta property="og:description" content="ctfhub系列第二篇，rce之eval与文件包含">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://winny1001.github.io/2020/07/30/CTF/ctfhub%E6%8A%80%E8%83%BD%E6%A0%91-web-RCE%E4%B9%8Beval%E3%80%81%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/image-20200730155557512.png">
+<meta property="og:image" content="https://winny1001.github.io/2020/07/30/CTF/ctfhub%E6%8A%80%E8%83%BD%E6%A0%91-web-RCE%E4%B9%8Beval%E3%80%81%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/image-20200728222754175.png">
+<meta property="og:image" content="https://winny1001.github.io/2020/07/30/CTF/ctfhub%E6%8A%80%E8%83%BD%E6%A0%91-web-RCE%E4%B9%8Beval%E3%80%81%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/image-20200730153921884.png">
+<meta property="og:image" content="https://winny1001.github.io/2020/07/30/CTF/ctfhub%E6%8A%80%E8%83%BD%E6%A0%91-web-RCE%E4%B9%8Beval%E3%80%81%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/image-20200730153821908.png">
+<meta property="og:image" content="https://winny1001.github.io/2020/07/30/CTF/ctfhub%E6%8A%80%E8%83%BD%E6%A0%91-web-RCE%E4%B9%8Beval%E3%80%81%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/image-20200728223933664.png">
+<meta property="og:image" content="https://winny1001.github.io/2020/07/30/CTF/ctfhub%E6%8A%80%E8%83%BD%E6%A0%91-web-RCE%E4%B9%8Beval%E3%80%81%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/image-20200728223945677.png">
+<meta property="og:image" content="https://winny1001.github.io/2020/07/30/CTF/ctfhub%E6%8A%80%E8%83%BD%E6%A0%91-web-RCE%E4%B9%8Beval%E3%80%81%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/image-20200728224421429.png">
+<meta property="og:image" content="https://winny1001.github.io/2020/07/30/CTF/ctfhub%E6%8A%80%E8%83%BD%E6%A0%91-web-RCE%E4%B9%8Beval%E3%80%81%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/image-20200730154818635.png">
+<meta property="og:image" content="https://winny1001.github.io/2020/07/30/CTF/ctfhub%E6%8A%80%E8%83%BD%E6%A0%91-web-RCE%E4%B9%8Beval%E3%80%81%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/image-20200730154859368.png">
+<meta property="og:image" content="https://winny1001.github.io/2020/07/30/CTF/ctfhub%E6%8A%80%E8%83%BD%E6%A0%91-web-RCE%E4%B9%8Beval%E3%80%81%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/image-20200730154918100.png">
+<meta property="og:image" content="https://winny1001.github.io/2020/07/30/CTF/ctfhub%E6%8A%80%E8%83%BD%E6%A0%91-web-RCE%E4%B9%8Beval%E3%80%81%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/image-20200728230112933.png">
+<meta property="og:image" content="https://winny1001.github.io/2020/07/30/CTF/ctfhub%E6%8A%80%E8%83%BD%E6%A0%91-web-RCE%E4%B9%8Beval%E3%80%81%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/image-20200728230147871.png">
+<meta property="og:image" content="https://winny1001.github.io/2020/07/30/CTF/ctfhub%E6%8A%80%E8%83%BD%E6%A0%91-web-RCE%E4%B9%8Beval%E3%80%81%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/image-20200728230338863.png">
+<meta property="og:image" content="https://winny1001.github.io/2020/07/30/CTF/ctfhub%E6%8A%80%E8%83%BD%E6%A0%91-web-RCE%E4%B9%8Beval%E3%80%81%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/image-20200728231301739.png">
+<meta property="og:image" content="https://winny1001.github.io/2020/07/30/CTF/ctfhub%E6%8A%80%E8%83%BD%E6%A0%91-web-RCE%E4%B9%8Beval%E3%80%81%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/image-20200728231554765.png">
+<meta property="og:image" content="https://winny1001.github.io/2020/07/30/CTF/ctfhub%E6%8A%80%E8%83%BD%E6%A0%91-web-RCE%E4%B9%8Beval%E3%80%81%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/image-20200728231744426.png">
+<meta property="og:image" content="https://winny1001.github.io/2020/07/30/CTF/ctfhub%E6%8A%80%E8%83%BD%E6%A0%91-web-RCE%E4%B9%8Beval%E3%80%81%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/image-20200728231924149.png">
+<meta property="og:image" content="https://winny1001.github.io/2020/07/30/CTF/ctfhub%E6%8A%80%E8%83%BD%E6%A0%91-web-RCE%E4%B9%8Beval%E3%80%81%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/image-20200728232001224.png">
+<meta property="og:image" content="https://winny1001.github.io/2020/07/30/CTF/ctfhub%E6%8A%80%E8%83%BD%E6%A0%91-web-RCE%E4%B9%8Beval%E3%80%81%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/image-20200728232316912.png">
+<meta property="og:image" content="https://winny1001.github.io/2020/07/30/CTF/ctfhub%E6%8A%80%E8%83%BD%E6%A0%91-web-RCE%E4%B9%8Beval%E3%80%81%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/image-20200728232832725.png">
+<meta property="og:image" content="https://winny1001.github.io/2020/07/30/CTF/ctfhub%E6%8A%80%E8%83%BD%E6%A0%91-web-RCE%E4%B9%8Beval%E3%80%81%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/image-20200728232902587.png">
+<meta property="og:image" content="https://winny1001.github.io/2020/07/30/CTF/ctfhub%E6%8A%80%E8%83%BD%E6%A0%91-web-RCE%E4%B9%8Beval%E3%80%81%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/image-20200728233102208.png">
+<meta property="og:image" content="https://winny1001.github.io/2020/07/30/CTF/ctfhub%E6%8A%80%E8%83%BD%E6%A0%91-web-RCE%E4%B9%8Beval%E3%80%81%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/image-20200728232928462.png">
+<meta property="article:published_time" content="2020-07-30T06:58:30.000Z">
+<meta property="article:modified_time" content="2024-06-11T10:07:11.307Z">
+<meta property="article:author" content="Winny">
+<meta property="article:tag" content="CTF">
+<meta property="article:tag" content="web">
+<meta property="article:tag" content="ctfhub">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://winny1001.github.io/2020/07/30/CTF/ctfhub%E6%8A%80%E8%83%BD%E6%A0%91-web-RCE%E4%B9%8Beval%E3%80%81%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/image-20200730155557512.png">
+
+
+<link rel="canonical" href="https://winny1001.github.io/2020/07/30/CTF/ctfhub%E6%8A%80%E8%83%BD%E6%A0%91-web-RCE%E4%B9%8Beval%E3%80%81%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://winny1001.github.io/2020/07/30/CTF/ctfhub%E6%8A%80%E8%83%BD%E6%A0%91-web-RCE%E4%B9%8Beval%E3%80%81%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/","path":"2020/07/30/CTF/ctfhub技能树-web-RCE之eval、文件包含/","title":"ctfhub技能树_web_RCE之eval、文件包含"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>ctfhub技能树_web_RCE之eval、文件包含 | Winny的一亩三分地</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Winny的一亩三分地</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description"> Imagination will take you everywhere</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#eval%E6%89%A7%E8%A1%8C"><span class="nav-number">1.</span> <span class="nav-text">eval执行</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB"><span class="nav-number">2.</span> <span class="nav-text">文件包含</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#phpinput"><span class="nav-number">3.</span> <span class="nav-text">php:&#x2F;&#x2F;input</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BF%9C%E7%A8%8B%E5%8C%85%E5%90%AB"><span class="nav-number">4.</span> <span class="nav-text">远程包含</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AF%BB%E5%8F%96%E6%BA%90%E4%BB%A3%E7%A0%81"><span class="nav-number">5.</span> <span class="nav-text">读取源代码</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Winny</p>
+  <div class="site-description" itemprop="description">因为热爱，所以折腾</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/winny1001" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;winny1001" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/qq_42988973" title="CSDN → https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_42988973" rel="noopener me" target="_blank"><i class="fa-solid fa-c fa-fw"></i>CSDN</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="Back to top">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://winny1001.github.io/2020/07/30/CTF/ctfhub%E6%8A%80%E8%83%BD%E6%A0%91-web-RCE%E4%B9%8Beval%E3%80%81%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Winny">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Winny的一亩三分地">
+      <meta itemprop="description" content="因为热爱，所以折腾">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="ctfhub技能树_web_RCE之eval、文件包含 | Winny的一亩三分地">
+      <meta itemprop="description" content="ctfhub系列第二篇，rce之eval与文件包含">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ctfhub技能树_web_RCE之eval、文件包含
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2020-07-30 15:58:30" itemprop="dateCreated datePublished" datetime="2020-07-30T15:58:30+09:00">2020-07-30</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-06-11 19:07:11" itemprop="dateModified" datetime="2024-06-11T19:07:11+09:00">2024-06-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/CTF/" itemprop="url" rel="index"><span itemprop="name">CTF</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/CTF/web/" itemprop="url" rel="index"><span itemprop="name">web</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">ctfhub系列第二篇，rce之eval与文件包含</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>这次我们来看看RCE（远程代码/命令执行）吧。由于篇幅限制，<strong>这篇文章不包含命令注入</strong>，命令注入我会在另一篇文章中详细的记录。</p>
+<h1 id="eval执行">eval执行</h1>
+<p><img src="/2020/07/30/CTF/ctfhub技能树-web-RCE之eval、文件包含/image-20200730155557512.png"  alt="image-20200730155557512" style="zoom:67%;" /></p>
+<p>打开题目，可以看到网页的源代码</p>
+<img src="/2020/07/30/CTF/ctfhub%E6%8A%80%E8%83%BD%E6%A0%91-web-RCE%E4%B9%8Beval%E3%80%81%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/image-20200728222754175.png" class="" title="image-20200728222754175">
+<p>通过代码可以看到，这就是典型的web后门，配置中国蚁剑</p>
+<p><img src="/2020/07/30/CTF/ctfhub技能树-web-RCE之eval、文件包含/image-20200730153921884.png"  alt="image-20200730153921884" style="zoom:67%;" /></p>
+<p>进入后台，获取flag</p>
+<p><img src="/2020/07/30/CTF/ctfhub技能树-web-RCE之eval、文件包含/image-20200730153821908.png"  alt="image-20200730153821908" style="zoom:80%;" /></p>
+<h1 id="文件包含">文件包含</h1>
+<p><img src="/2020/07/30/CTF/ctfhub技能树-web-RCE之eval、文件包含/image-20200728223933664.png"  alt="image-20200728223933664" style="zoom:67%;" /></p>
+<p>看看代码：</p>
+<img src="/2020/07/30/CTF/ctfhub%E6%8A%80%E8%83%BD%E6%A0%91-web-RCE%E4%B9%8Beval%E3%80%81%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/image-20200728223945677.png" class="" title="image-20200728223945677">
+<p>strpos(string,find,start)
+函数查找字符串在另一字符串中第一次出现的位置</p>
+<table>
+<colgroup>
+<col style="width: 11%" />
+<col style="width: 88%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">参数</th>
+<th style="text-align: left;">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><em>string</em></td>
+<td style="text-align: left;">必需。规定要搜索的字符串。</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><em>find</em></td>
+<td style="text-align: left;">必需。规定要查找的字符串。</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><em>start</em></td>
+<td style="text-align: left;">可选。规定在何处开始搜索。</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">返回值：</td>
+<td
+style="text-align: left;">返回字符串在另一字符串中第一次出现的位置，如果没有找到字符串则返回
+FALSE。<br /><strong>注释：</strong>字符串位置从 0 开始，不是从 1
+开始。</td>
+</tr>
+</tbody>
+</table>
+<p>可以看到如果get传入参数file的值开头<strong>不</strong>为xflag（x为任意字符），则执行include()函数。</p>
+<p>include （或
+require）语句会获取指定文件中存在的所有文本/代码/标记，并复制到使用
+include 语句的文件中。</p>
+<p>服务器后台有一句话木马shell.txt，因此我们的目标就是让服务器执行shell.txt中的语句。所以file的值为shell.txt</p>
+<p>看看shell：</p>
+<img src="/2020/07/30/CTF/ctfhub%E6%8A%80%E8%83%BD%E6%A0%91-web-RCE%E4%B9%8Beval%E3%80%81%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/image-20200728224421429.png" class="" title="image-20200728224421429">
+<p>则shell要传的参数是ctfhub：</p>
+<img src="/2020/07/30/CTF/ctfhub%E6%8A%80%E8%83%BD%E6%A0%91-web-RCE%E4%B9%8Beval%E3%80%81%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/image-20200730154818635.png" class="" title="image-20200730154818635">
+<p>查找flag：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find / -name flag*</span><br></pre></td></tr></table></figure>
+<img src="/2020/07/30/CTF/ctfhub%E6%8A%80%E8%83%BD%E6%A0%91-web-RCE%E4%B9%8Beval%E3%80%81%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/image-20200730154859368.png" class="" title="image-20200730154859368">
+<p>得到flag：</p>
+<img src="/2020/07/30/CTF/ctfhub%E6%8A%80%E8%83%BD%E6%A0%91-web-RCE%E4%B9%8Beval%E3%80%81%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/image-20200730154918100.png" class="" title="image-20200730154918100">
+<h1 id="phpinput">php://input</h1>
+<p><img src="/2020/07/30/CTF/ctfhub技能树-web-RCE之eval、文件包含/image-20200728230112933.png"  alt="image-20200728230112933" style="zoom:67%;" /></p>
+<p>首先看代码：</p>
+<img src="/2020/07/30/CTF/ctfhub%E6%8A%80%E8%83%BD%E6%A0%91-web-RCE%E4%B9%8Beval%E3%80%81%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/image-20200728230147871.png" class="" title="image-20200728230147871">
+<p>可以看到如果get的参数file前六个字符为”php://“则执行include函数</p>
+<p>看看phpinfo</p>
+<p><img src="/2020/07/30/CTF/ctfhub技能树-web-RCE之eval、文件包含/image-20200728230338863.png"  alt="image-20200728230338863" style="zoom:67%;" /></p>
+<p>可以看到allow_url_include是On，说明可以使用php://input伪协议。</p>
+<p>php://input
+是个可以访问请求的原始数据的只读流。其实说白了它就是用来获取post内容的，但是其实只要你把内容写到请求包中，post和get都能获取。</p>
+<p>那我们就通过这个伪协议和精心构造的请求包来获取我们想要的信息（注意此时虽然我是get请求而不是post，但由于我的包中有内容，所以伪协议依然是接收到了）：</p>
+<img src="/2020/07/30/CTF/ctfhub%E6%8A%80%E8%83%BD%E6%A0%91-web-RCE%E4%B9%8Beval%E3%80%81%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/image-20200728231301739.png" class="" title="image-20200728231301739">
+<p>这样我们就可以来找我们要的flag了</p>
+<img src="/2020/07/30/CTF/ctfhub%E6%8A%80%E8%83%BD%E6%A0%91-web-RCE%E4%B9%8Beval%E3%80%81%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/image-20200728231554765.png" class="" title="image-20200728231554765">
+<p>有了flag的路径，就可以得到flag了。</p>
+<img src="/2020/07/30/CTF/ctfhub%E6%8A%80%E8%83%BD%E6%A0%91-web-RCE%E4%B9%8Beval%E3%80%81%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/image-20200728231744426.png" class="" title="image-20200728231744426">
+<h1 id="远程包含">远程包含</h1>
+<p><img src="/2020/07/30/CTF/ctfhub技能树-web-RCE之eval、文件包含/image-20200728231924149.png"  alt="image-20200728231924149" style="zoom:67%;" /></p>
+<p>看代码：</p>
+<img src="/2020/07/30/CTF/ctfhub%E6%8A%80%E8%83%BD%E6%A0%91-web-RCE%E4%B9%8Beval%E3%80%81%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/image-20200728232001224.png" class="" title="image-20200728232001224">
+<p>这个题的解法和上一题php://input一模一样，不再赘述。</p>
+<img src="/2020/07/30/CTF/ctfhub%E6%8A%80%E8%83%BD%E6%A0%91-web-RCE%E4%B9%8Beval%E3%80%81%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/image-20200728232316912.png" class="" title="image-20200728232316912">
+<h1 id="读取源代码">读取源代码</h1>
+<img src="/2020/07/30/CTF/ctfhub%E6%8A%80%E8%83%BD%E6%A0%91-web-RCE%E4%B9%8Beval%E3%80%81%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/image-20200728232832725.png" class="" title="image-20200728232832725">
+<p>代码审计：</p>
+<img src="/2020/07/30/CTF/ctfhub%E6%8A%80%E8%83%BD%E6%A0%91-web-RCE%E4%B9%8Beval%E3%80%81%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/image-20200728232902587.png" class="" title="image-20200728232902587">
+<p>首先尝试php://input，发现没有返回结果</p>
+<p><img src="/2020/07/30/CTF/ctfhub技能树-web-RCE之eval、文件包含/image-20200728233102208.png"  alt="image-20200728233102208" style="zoom:67%;" /></p>
+<p>测试了好多遍都无果，那看来是没法用input了。再看题目，题目告诉我们了flag的路径，于是我们可以用另一条伪指令php://filter来进行读取</p>
+<p>php://filter是一种元封装器，
+设计用于数据流打开时的筛选过滤应用。简单理解就是个可以读取数据的过滤器。我们可以用它选择想要进行操作并读取的内容。</p>
+<p>php://filter 目标使用以下的参数作为它路径的一部分。
+复合过滤链能够在一个路径上指定。详细使用这些参数可以参考具体范例。</p>
+<table>
+<colgroup>
+<col style="width: 31%" />
+<col style="width: 68%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">名称</th>
+<th style="text-align: left;">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><em>resource=<要过滤的数据流></em></td>
+<td
+style="text-align: left;">这个参数是必须的。它指定了你要筛选过滤的数据流。</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><em>read=<读链的筛选列表></em></td>
+<td
+style="text-align: left;">该参数可选。可以设定一个或多个过滤器名称，以管道符（<em>|</em>）分隔。</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><em>write=<写链的筛选列表></em></td>
+<td
+style="text-align: left;">该参数可选。可以设定一个或多个过滤器名称，以管道符（<em>|</em>）分隔。</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><em>&lt;；两个链的筛选列表&gt;</em></td>
+<td style="text-align: left;">任何没有以 <em>read=</em> 或
+<em>write=</em> 作前缀 的筛选器列表会视情况应用于读或写链。</td>
+</tr>
+</tbody>
+</table>
+<p>关于php://filter更多的妙用可以看这个大佬的<a
+target="_blank" rel="noopener" href="https://www.leavesongs.com/PENETRATION/php-filter-magic.html">文章</a>。</p>
+<p>知道了php://filter的用法，我们就可以读取flag了。</p>
+<img src="/2020/07/30/CTF/ctfhub%E6%8A%80%E8%83%BD%E6%A0%91-web-RCE%E4%B9%8Beval%E3%80%81%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/image-20200728232928462.png" class="" title="image-20200728232928462">
+<p>关于伪协议部分，这里是官方的<a
+target="_blank" rel="noopener" href="https://www.php.net/manual/zh/wrappers.php.php">文档</a>。</p>
+<p>至此，我们初步了解了文件包含和eval执行，解锁了对应的技能树，下一步，我们就来看看命令注入吧。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/CTF/" rel="tag"># CTF</a>
+              <a href="/tags/web/" rel="tag"># web</a>
+              <a href="/tags/ctfhub/" rel="tag"># ctfhub</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/07/28/CTF/ctfhub%E6%8A%80%E8%83%BD%E6%A0%91-web-web%E5%89%8D%E7%BD%AE%E6%8A%80%E8%83%BD%E4%B9%8Bhttp%E5%8D%8F%E8%AE%AE/" rel="prev" title="ctfhub技能树_web_web前置技能之http协议">
+                  <i class="fa fa-angle-left"></i> ctfhub技能树_web_web前置技能之http协议
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/07/31/CTF/cthub%E6%8A%80%E8%83%BD%E6%A0%91-web-RCE%E4%B9%8B%E5%91%BD%E4%BB%A4%E6%B3%A8%E5%85%A5/" rel="next" title="cthub技能树_web_RCE之命令注入">
+                  cthub技能树_web_RCE之命令注入 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Winny</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>
